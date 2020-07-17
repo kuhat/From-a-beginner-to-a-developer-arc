@@ -1,6 +1,6 @@
-title: Your awesome title
-author: GitHub User
-email: your-email@domain.com
+title: Beginner's Development Process
+author: kuhat
+email: 1043744621@qq.com
 description: > # this means to ignore newlines until "show_exerpts:"
   Write an awesome description for your new site here. You can edit this
   line in _config.yml. It will appear in your document head meta (for
@@ -12,9 +12,9 @@ show_excerpts: true # set to true to show excerpts on the homepage
 sass:
   sass_dir: _sass
 plainwhite:
-  name: Adam Denisov
-  tagline: Developer. Designer
-  date_format: "%b %-d, %Y"
+  name: Danny Hao
+  tagline: Beginner's Development Process
+  date_format: "09 07, 2020"
   sitemap: true # set to true to generate sitemap.xml content
   search: true # set to true to enable searchbar
   dark_mode: true # set to true to add dark mode toggle
@@ -22,16 +22,16 @@ plainwhite:
 
   # generate social links in footer
   social_links:
-    twitter: thelehhman
-    github:  thelehhman
+    twitter: zwh44555299
+    github:  kuhat
     # linkedIn: in/thelehhman
     rss: rss
     # dribbble: jekyll
     # flickr:   jekyll
-    instagram: jekyll
+    instagram: danny_hao529
     # pinterest: jekyll
     # youtube: jekyll
-    facebook: jekyll
+    facebook: 闻浩周
     # soundcloud: jekyll
     # telegram: jekyll
     # gitlab: jekyll
