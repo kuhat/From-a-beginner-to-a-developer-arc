@@ -5,6 +5,7 @@ date:   2020-07-12 21:03:36 +0530
 categories: Kubectl Shell
 ---
 ## Overview
+## Introduction
 In Development (Dev) environments, running containers on a single host for development and testing of applications may be an option. However, when migrating to Quality Assurance (QA) and Production (Prod) environments, that is no longer a viable option because the applications and services need to meet specific requirements:
 
 + Fault-tolerance
