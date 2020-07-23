@@ -4,6 +4,8 @@ title:  "Git"
 date:   2020-07-07 21:03:36 +0530
 categories: Git 
 ---
+This post includes the general description of **Git** and its operations.
+
 ## Git Intro
 
 ### Version Control

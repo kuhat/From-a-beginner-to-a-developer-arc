@@ -1,10 +1,13 @@
 ---
 layout: post
-title:  "Apache Maven"
+title:  "Maven"
 description: An introduction of Maven and its general use.
 date:   2020-07-14 21:03:36 +0530
 ---
-## Overview
+
+This post describes the fundamental concepts of Apache Maven and the use of dependency control. 
+
+### Overview
 
  In a nutshell, **Maven** is an attempt to **apply patterns to a project’s build infrastructure** in order to **promote comprehension and productivity** by providing a clear path in the use of best practices. **Maven** is essentially a project management and comprehension tool and as such provides a way to help with managing:
 

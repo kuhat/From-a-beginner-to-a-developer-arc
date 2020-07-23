@@ -5,7 +5,7 @@ description: An introduction of what docker is & the basic commonds.
 date:   2020-07-09 21:03:36 +0530
 categories: Docker shell
 ---
-## Basic features
+This post demonstrates the concepts of container and `Docker`. The basic operations of `Docker` will also be inspected.
 
 ## Overview
 
@@ -70,7 +70,7 @@ When starting Docker, there is a original virtual bridge named **Docker0** will 
 
 Next, to assign the IP to the containers, Docker will **select a different IP address** and subnet from the private IP network segment defined by RFC1918 and assign it to Docker0. The container connected to Docker0 will select an unused IP from the subnet for use.As usual, Docker will use the network segment 172.17.0.0/16 and allocate 172.17.0.1/16 to docker0 bridge (Docker0 can be seen when using ifconfig command on the host, it can be considered as the management interface of the bridge and used as a virtual network card on the host).The network topology under stand-alone environment is as follows, and the host address is 10.10.0.186/24.
 
-![Docker0](https://sh-download-ipv6.ftn.qq.com/ftn_handler/c5f66338a5ae3c7867e141132254c87486d6be5b8e56a16baaf24f63fe421020dba94fadba4a22b6506b52e3022074e67efc11fdd0be3cdc64263ff6288d0f6f/?fname=*.jpg&pictype=scaled&size=1024*768)
+![Docker0](https://note.youdao.com/yws/api/personal/file/WEB527494ac026a2b636bb92db9cf530222?method=getImage&version=28&cstk=VyfDo8Y3)
 <center>Docker0 Virtual network</center>
 
 ### Evth-pair
@@ -272,7 +272,9 @@ bin  dev  etc  home  lib  lib64  lost+found  media  mnt  opt  proc  root  run  s
 ```shell
 docker cp [Container ID][Location] [Host Location] 
 ```
-![cp command](https://xg-ctfs.ftn.qq.com/ftn_handler/89ecf84d9971108d30bf54ad2e7416d79dfa7c7713d618bc49e1c84c3821f807ad2661faf332f0ee9c45188a45498576e73c8d63846e3dc0baa55bb1b66c6eef/?fname=*.png&pictype=scaled&size=1024*768)
+The instance below copies `test.java` in container `fff` at the location /home to 
+
+![cp command](https://note.youdao.com/yws/api/personal/file/WEBbc9d899e7bd4fd773390438b090bc6ac?method=getImage&version=29&cstk=VyfDo8Y3)
 <center>cp Command</center>
 
 ### Commit images
@@ -298,7 +300,7 @@ and connect the directory **/home/mysql/data** in the host machine with **/var/l
 
 After the connection, it is shown that the files in the container are sychronized with the directory connected with it. 
 
-![container data volume](https://xg-ctfs.ftn.qq.com/ftn_handler/03cab85cd5db4409e1cb38d88026eb9c53cd1db2f59adcfac604370ca839af9384ec75d24dbff5de55a2dee7879173a0734c7aa9ea9328abf4d5d6662e86607a/?fname=*.png&pictype=scaled&size=1024*768)     
+![container data volume](https://note.youdao.com/yws/api/personal/file/WEBcff666897b20ca9503e436decaa716a8?method=getImage&version=25&cstk=VyfDo8Y3)     
 <center>Container Data Volume Command</center>
 
 To create our own images: Dockerfile
@@ -312,24 +314,24 @@ VOLUME ["volume01","volume02"]
 
 CMD echo "----end----"
 ```
-![dockerfile](https://sz-download-ipv6.ftn.qq.com/ftn_handler/c45cb1f2c5bcca80c600328beb72b3b326205927d16b98a98d4b057d77efb9583a81b03e467028aa40b1f7b52cd30838b7c14509fc5f5251ad3934a929a1f346/?fname=*.png&pictype=scaled&size=1024*768)
+![dockerfile](https://note.youdao.com/yws/api/personal/file/WEB2709ad8d76a0d44ae062c994b3c65b0f?method=getImage&version=30&cstk=VyfDo8Y3)
 <center>Create New Images Using Dockerfile</center>
 
 Then, to generate the container we just created, we can see the two data volumes we just created.
 
-![dockerfile1](https://xg-ctfs.ftn.qq.com/ftn_handler/bfc59dd456a5b9ab5643a9ef309b01ec6106b2b0386f41804200ba4d350154733e28d88910ca2e68c6d41ab8e388f3f12d51a8f0426013202d13cda4e9b885b6/?fname=*.jpg&pictype=scaled&size=1024*768)
+![dockerfile1](https://note.youdao.com/yws/api/personal/file/WEB697abb05646508fc453b4d060e735b66?method=getImage&version=19&cstk=VyfDo8Y3)
 <center>The Two Volumes</center>
 
 Then, when we inspect into the container, there are "Mounts" that indicate that the data volumes connections are successful
 
-![Mounts](https://xg-ctfs.ftn.qq.com/ftn_handler/5af827586013927ca311d8c4076efdc8da25cb5a2e43f015da48e594e2a400804ef7663ead87d8260c8aa9687e83173151363172432043690ea01b65bc723288/?fname=*.jpg&pictype=scaled&size=1024*768)
+![Mounts](https://note.youdao.com/yws/api/personal/file/WEB7c7f7a61b3bd1141e66e6e586649c65f?method=getImage&version=17&cstk=VyfDo8Y3)
 <center>Two Volumes in Mounts</center>
 
 Next, after creating a file in the container, we can find that the file also apears in the host directory.
 
-![creat file in the container](https://xg-ctfs.ftn.qq.com/ftn_handler/814bd79f939c35848a3aab3cbd8beb72cf7ff3c031e39d2d9cabc146be40096b9de32fda70b131a78c07985206ce11bc4abd762ea4469671377319790b450945/?fname=*.png&pictype=scaled&size=1024*768)
+![creat file in the container](https://note.youdao.com/yws/api/personal/file/WEB9eeb66a00706e1d1db2ad1e8f7cb6807?method=getImage&version=31&cstk=VyfDo8Y3)
 <center>Creating container.TXT in Container</center>
-![creat file in the container](https://xg-ctfs.ftn.qq.com/ftn_handler/13c1535431bb6709cb1374a0f5f2819a5ae7fe4a4bf9ce41ea998ff3a1ce22cc8f07c9598ea4c1cbe120ae2e5ed50037da1ae6895071d7e4f6e6068471db2873/?fname=*.png&pictype=scaled&size=1024*768)
+![creat file in the container](https://note.youdao.com/yws/api/personal/file/WEB1a1bfe464d7576cc5ff528ad5b4d4b75?method=getImage&version=18&cstk=VyfDo8Y3)
 <center>Appearence of the File</center>
 
 #### Connections Between Two Containers
@@ -338,17 +340,17 @@ After demonstrating the process of data volume between host and containers, the 
 
 Firstly, create one host container named docker01 made by the image "dannycentos".
 
-![create the first host container](https://xg-ctfs.ftn.qq.com/ftn_handler/0195ad37bbd5b51faa862dc6d9196d0b576095debf34cb73372da290e38dd146d98017167f1cdbf3a8253b6ca7d717839308cfbb22beb64963a5ad0a4acf911a/?fname=*.png&pictype=scaled&size=1024*768)
+![create the first host container](https://note.youdao.com/yws/api/personal/file/WEBdba9a20a650501f636721975f09bab73?method=getImage&version=22&cstk=VyfDo8Y3)
 <center>create the first host container</center>
 
 Next, create the child container named docker2 using --volume-from.
 
-![create the second child container](https://xg-ctfs.ftn.qq.com/ftn_handler/946aa690be45c0ed74e98b333a0d3dd5b027b8ad53066215fa056e0b83fc92dee7ece53f9b5f9a9d976f85fd57ec3d2db5600f89083cdbfca379d13cecad9d7e/?fname=*.png&pictype=scaled&size=1024*768)
+![create the second child container](https://note.youdao.com/yws/api/personal/file/WEB4b84d319286de30864ad4e8386d3a963?method=getImage&version=21&cstk=VyfDo8Y3)
 <center>create the second child container</center>
 
 After make a file named docker1 in the volume01 directory in the host container, we cd into the volume folder in the child container, we can find the docker1 file. The result indicate that the data volume is working.
 
-![check the connection](https://xg-ctfs.ftn.qq.com/ftn_handler/8a641e59bc0d7bed47ab7601c97506c82c9ce95873ef3cfa80839ae917c408f6cf27cb812668938aaa75d7bebff1121c6ee2991ca102b65c967367cd2e364072/?fname=*.png&pictype=scaled&size=1024*768)
+![check the connection](https://note.youdao.com/yws/api/personal/file/WEBd6560f861b7d30cb4a2cc36d24dd9e03?method=getImage&version=23&cstk=VyfDo8Y3)
 <center>Check the Connection Between Two Container</center>
 
 ## DockerFile
@@ -389,22 +391,22 @@ ENV                # Set the environment virables
 1. Create a dockerfile in the home directory and write the file. 
 In this file, there enables the vim & ifconfig commands.
 
-    ![Write DockerFile](https://xg-ctfs.ftn.qq.com/ftn_handler/76d6167e1ec4706f8b370f5435bed07a30156794927b67219a0ab20e0bc2f805810dc77e2203b0a416ce158759131ca6e2d0a5ee0158855daa9acc0b750458eb/?fname=*.png&pictype=scaled&size=1024*768)
+    ![Write DockerFile](https://note.youdao.com/yws/api/personal/file/WEBb3c51b08720702c08d1492c6415f798f?method=getImage&version=16&cstk=VyfDo8Y3)
     <center>Write DockerFile</center>
 
 2. build this image, and name it as mycentos0.1
 
-    ![Build image](https://xg-ctfs.ftn.qq.com/ftn_handler/f86cf77a3d17c0da6d7eeaf5664b8f02a2b22be548457c62f1c4bfff748632a6437cf80cf5b9e0feded89719f8fb43975b4988f902bd3015c1e1b41a4502b95b/?fname=*.png&pictype=scaled&size=1024*768)
+    ![Build image](https://note.youdao.com/yws/api/personal/file/WEB3c05c53beae3a2ef12c0dec36ab3863b?method=getImage&version=33&cstk=VyfDo8Y3)
     <center>Build image</center>
 
 3. Run it and test it
 
-    ![Run it and test it](https://xg-ctfs.ftn.qq.com/ftn_handler/2cb89ccf3239af056edc55aab4b52407090d54999e9e2d13482de226b2eb1886cfa48685cded3bae68d2bc04911120649846e81d9486e40506d4c04d576addd1/?fname=*.png&pictype=scaled&size=1024*768)
+    ![Run it and test it](https://note.youdao.com/yws/api/personal/file/WEBc7ed0b26b6ff55ec3eae6e099cf00390?method=getImage&version=9&cstk=VyfDo8Y3)
     <center>Run The Image</center>
 
 4. Run the original centos image, and it indicated that the basic image does not support the command vim and config
 
-    ![Original Centos](https://xg-ctfs.ftn.qq.com/ftn_handler/df547701f6cc93370e908ab847a000c1e766cfa8fa95eca85fe1ceca3eebe1fa4314d2412d678203af6ca1604b99e5eec8dbe7b5abc19a81476a5e39c7bf071f/?fname=*.png&pictype=scaled&size=1024*768)
+    ![Original Centos](https://note.youdao.com/yws/api/personal/file/WEB40590c8ebaf191d0a6fe992bd8ea96b3?method=getImage&version=34&cstk=VyfDo8Y3)
     <center>Original Centos</center>
 
 ### The Fundamental Commands
