@@ -70,7 +70,7 @@ When starting Docker, there is a original virtual bridge named **Docker0** will 
 
 Next, to assign the IP to the containers, Docker will **select a different IP address** and subnet from the private IP network segment defined by RFC1918 and assign it to Docker0. The container connected to Docker0 will select an unused IP from the subnet for use.As usual, Docker will use the network segment 172.17.0.0/16 and allocate 172.17.0.1/16 to docker0 bridge (Docker0 can be seen when using ifconfig command on the host, it can be considered as the management interface of the bridge and used as a virtual network card on the host).The network topology under stand-alone environment is as follows, and the host address is 10.10.0.186/24.
 
-![Docker0](https://note.youdao.com/yws/api/personal/file/WEB527494ac026a2b636bb92db9cf530222?method=getImage&version=28&cstk=VyfDo8Y3)
+![Docker0](https://thumbnail0.baidupcs.com/thumbnail/be29302b6tf30a864cfcb6415e268530?fid=156850721-250528-182922051127634&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-D3y%2BaeZLaqolbcZhAZVVnOsA06g%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742341534042419281&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Docker0 Virtual network</center>
 
 ### Evth-pair
@@ -274,7 +274,7 @@ docker cp [Container ID][Location] [Host Location]
 ```
 The instance below copies `test.java` in container `fff` at the location /home to 
 
-![cp command](https://note.youdao.com/yws/api/personal/file/WEBbc9d899e7bd4fd773390438b090bc6ac?method=getImage&version=29&cstk=VyfDo8Y3)
+![cp command](https://thumbnail0.baidupcs.com/thumbnail/bcad9cea3s12a5c3ba162bfcdd66257f?fid=156850721-250528-924006857958040&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-skwwAMV6Ev0TnqaPcNS3LpvN1II%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742303724050149480&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>cp Command</center>
 
 ### Commit images
@@ -300,7 +300,7 @@ and connect the directory **/home/mysql/data** in the host machine with **/var/l
 
 After the connection, it is shown that the files in the container are sychronized with the directory connected with it. 
 
-![container data volume](https://note.youdao.com/yws/api/personal/file/WEBcff666897b20ca9503e436decaa716a8?method=getImage&version=25&cstk=VyfDo8Y3)     
+![container data volume](https://thumbnail0.baidupcs.com/thumbnail/8cb10725dl11a0f29be5baf1b7dd5c63?fid=156850721-250528-394715415727919&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-a1fVH%2BHmIKyHhQtkRpUQxhLEcR0%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742369095330293925&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)     
 <center>Container Data Volume Command</center>
 
 To create our own images: Dockerfile
@@ -314,24 +314,24 @@ VOLUME ["volume01","volume02"]
 
 CMD echo "----end----"
 ```
-![dockerfile](https://note.youdao.com/yws/api/personal/file/WEB2709ad8d76a0d44ae062c994b3c65b0f?method=getImage&version=30&cstk=VyfDo8Y3)
+![dockerfile](https://thumbnail0.baidupcs.com/thumbnail/be16b2731g3a026028bbe4df5e014423?fid=156850721-250528-43420508819940&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-A8UIQJM2NLosrcJ7He2RDWdfUW8%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742449468650714133&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Create New Images Using Dockerfile</center>
 
 Then, to generate the container we just created, we can see the two data volumes we just created.
 
-![dockerfile1](https://note.youdao.com/yws/api/personal/file/WEB697abb05646508fc453b4d060e735b66?method=getImage&version=19&cstk=VyfDo8Y3)
+![dockerfile1](https://thumbnail0.baidupcs.com/thumbnail/1169e06c5n535af7cfb910f526ba6a65?fid=156850721-250528-805523939805521&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-ILqzxbPXe4fI1qXRZwaaG83Nygg%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742325151208641219&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>The Two Volumes</center>
 
 Then, when we inspect into the container, there are "Mounts" that indicate that the data volumes connections are successful
 
-![Mounts](https://note.youdao.com/yws/api/personal/file/WEB7c7f7a61b3bd1141e66e6e586649c65f?method=getImage&version=17&cstk=VyfDo8Y3)
+![Mounts](https://thumbnail0.baidupcs.com/thumbnail/b6f318a2bi57d987e2733cc6911247bc?fid=156850721-250528-1124620554175052&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-q58rGZgOtaCscuWZqo2llkIbOxw%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742405297631817939&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Two Volumes in Mounts</center>
 
 Next, after creating a file in the container, we can find that the file also apears in the host directory.
 
-![creat file in the container](https://note.youdao.com/yws/api/personal/file/WEB9eeb66a00706e1d1db2ad1e8f7cb6807?method=getImage&version=31&cstk=VyfDo8Y3)
+![creat file in the container](https://thumbnail0.baidupcs.com/thumbnail/c35de1790g18c0a57c8a19d4000b4289?fid=156850721-250528-705755742685014&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-lv6fyUY87selkHRVU73bjfAqF8M%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742437704526096658&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Creating container.TXT in Container</center>
-![creat file in the container](https://note.youdao.com/yws/api/personal/file/WEB1a1bfe464d7576cc5ff528ad5b4d4b75?method=getImage&version=18&cstk=VyfDo8Y3)
+![creat file in the container](https://thumbnail0.baidupcs.com/thumbnail/a15c9d646l8e4a57a587d2e1b140fc8d?fid=156850721-250528-108799109188226&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-oIOBthsB3%2BszZJ%2FDkgvt1B7JkJA%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742419951490248972&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Appearence of the File</center>
 
 #### Connections Between Two Containers
@@ -340,17 +340,17 @@ After demonstrating the process of data volume between host and containers, the 
 
 Firstly, create one host container named docker01 made by the image "dannycentos".
 
-![create the first host container](https://note.youdao.com/yws/api/personal/file/WEBdba9a20a650501f636721975f09bab73?method=getImage&version=22&cstk=VyfDo8Y3)
+![create the first host container](https://thumbnail0.baidupcs.com/thumbnail/f33d84bdeoa11d30685bc4a7b425398e?fid=156850721-250528-680645839667931&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-3mIl9MohO2CTH2NX%2B4bnDNzK8sE%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742474561254258414&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>create the first host container</center>
 
 Next, create the child container named docker2 using --volume-from.
 
-![create the second child container](https://note.youdao.com/yws/api/personal/file/WEB4b84d319286de30864ad4e8386d3a963?method=getImage&version=21&cstk=VyfDo8Y3)
+![create the second child container](https://thumbnail0.baidupcs.com/thumbnail/11b4ba307uf4dd04671b935640795ac8?fid=156850721-250528-601934638678258&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-1MqTAqC2YvekcyEY7vALy1f5E4A%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742483718079006155&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>create the second child container</center>
 
 After make a file named docker1 in the volume01 directory in the host container, we cd into the volume folder in the child container, we can find the docker1 file. The result indicate that the data volume is working.
 
-![check the connection](https://note.youdao.com/yws/api/personal/file/WEBd6560f861b7d30cb4a2cc36d24dd9e03?method=getImage&version=23&cstk=VyfDo8Y3)
+![check the connection](https://thumbnail0.baidupcs.com/thumbnail/6ec6e4d24lf1109c996e2a55645b204b?fid=156850721-250528-798044893038841&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-ryjlsX7jV%2FlcVrozOTQLi%2FFs0vY%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742513562987567577&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Check the Connection Between Two Container</center>
 
 ## DockerFile
@@ -391,22 +391,22 @@ ENV                # Set the environment virables
 1. Create a dockerfile in the home directory and write the file. 
 In this file, there enables the vim & ifconfig commands.
 
-    ![Write DockerFile](https://note.youdao.com/yws/api/personal/file/WEBb3c51b08720702c08d1492c6415f798f?method=getImage&version=16&cstk=VyfDo8Y3)
+    ![Write DockerFile](https://thumbnail0.baidupcs.com/thumbnail/be49eaaf0l7950e79e4a35a3de8c5436?fid=156850721-250528-7726647146018&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-pSzl1axG3Cg65CPWWtQ69uYws38%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742534299992310514&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
     <center>Write DockerFile</center>
 
 2. build this image, and name it as mycentos0.1
 
-    ![Build image](https://note.youdao.com/yws/api/personal/file/WEB3c05c53beae3a2ef12c0dec36ab3863b?method=getImage&version=33&cstk=VyfDo8Y3)
+    ![Build image](https://thumbnail0.baidupcs.com/thumbnail/9b6bc6218r090f88e9ba590a2c963cae?fid=156850721-250528-235418313690892&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-JOLCU4XRMpdqfORplqfmNewIYQM%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742557529319684634&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
     <center>Build image</center>
 
 3. Run it and test it
 
-    ![Run it and test it](https://note.youdao.com/yws/api/personal/file/WEBc7ed0b26b6ff55ec3eae6e099cf00390?method=getImage&version=9&cstk=VyfDo8Y3)
+    ![Run it and test it](https://thumbnail0.baidupcs.com/thumbnail/ff15a702ama773bcdf1c88290c705149?fid=156850721-250528-90723265413843&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-0LdKloR6ILLYWJ5mLRn927f1HC4%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742600194207189631&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
     <center>Run The Image</center>
 
 4. Run the original centos image, and it indicated that the basic image does not support the command vim and config
 
-    ![Original Centos](https://note.youdao.com/yws/api/personal/file/WEB40590c8ebaf191d0a6fe992bd8ea96b3?method=getImage&version=34&cstk=VyfDo8Y3)
+    ![Original Centos](https://thumbnail0.baidupcs.com/thumbnail/482d711a0va2d948dd03403a9e4f8696?fid=156850721-250528-743957250461833&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-EocEaq2JZ7NRxQ2xVQ36tWM9CoQ%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742583975577876408&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
     <center>Original Centos</center>
 
 ### The Fundamental Commands
