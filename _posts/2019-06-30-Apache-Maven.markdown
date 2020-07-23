@@ -34,14 +34,14 @@ To download `Maven`, Go to the [official site](https://maven.apache.org/guides/g
 
 To configurate the local repository location, go to ../apache-maven-3.5.2/conf/settings.xml
 
-![local repository](https://xg-ctfs.ftn.qq.com/ftn_handler/126f9d852eaa760e1c65eaf5332fd62f04684b55ace0bb6259b22f29ad0e2316191ebff3983ce4dc11e5579a8aea4c3b798c192f68b32f7bf3c76cf937ba84cd/?fname=*.jpg&pictype=scaled&size=1024*768)
+![local repository](https://thumbnail0.baidupcs.com/thumbnail/a9364da52n522c29c9a6e589efe28569?fid=156850721-250528-1121170466074613&time=1595480400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-rehAdaJGAQhiIFv6RKDMd0xhwWE%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4744578516992199641&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Default Local repository</center>
 
 For the `Maven` projects, the compiler will firstly go to the `pom.xml` to find the dependencies' location in the local repository specified above, if it can not find the source `.jar` file it needs, then it will go to the center repository to download the files it needs. In the center repository, there contains **almost all the open-source source `.jar` files required to exploit programs**. Also, it can also find the souces in the remote repository which can create by a company or a group. If the remote repository does not cantain the sources it needs, then, the remote repository will go to the center repository to download the dource files.
 
 We can configurate the local repository by changing the local repository in the `settings.xml`.
 
-![local repository](https://xg-ctfs.ftn.qq.com/ftn_handler/917f61568aca6a4ea450965be29ca44bd07576132c03be4962afdc0d999338aa9ecd5d1480f7bb6c57cb204890c56c162bde67b445c0bbb98b054ad45ceaf345/?fname=*.png&pictype=scaled&size=1024*768)
+![local repository](https://thumbnail0.baidupcs.com/thumbnail/51a10f29bk93b9b017365b09725a4bde?fid=156850721-250528-222241925351342&time=1595473200&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-IC6T4lpQy4RypqBlxkqEbB991kI%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4742717448682454951&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Change Local Repository</center>
 
 After the configuration, all the `.jar` files it needs will be stored in the `D:/zwh52/softewares2/maven/repository` directory.

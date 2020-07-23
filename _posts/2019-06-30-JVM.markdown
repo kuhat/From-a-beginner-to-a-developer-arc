@@ -89,7 +89,7 @@ In terms of actual, **Method area** is like **Heap**, is the memory that threads
 
 For example, an demo Java program describing the memory distribution is demonstrated below:
 
-![Memory Distribute](https://xg-ctfs.ftn.qq.com/ftn_handler/69eaeec3e9302b522b21d2b784cf0595080b029c5e716e1ba13d0cdd4c20d5c614b0d2b89da53040089bb29a3b47d2658c328d1dc63c006f827797260ff338ac/?fname=*.jpg&pictype=scaled&size=1024*768)
+![Memory Distribute](https://thumbnail0.baidupcs.com/thumbnail/aa8115deat38e60f269649a20ee55c56?fid=156850721-250528-38848721365388&time=1595480400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-aYiTV%2Bs31Mxs%2B8TWYvKFmBj7i2Q%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4744662211405976814&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 <center>Memory Distribution</center>
 
 + As soon as we run the program, it loads all the **Runtime classes** into the **Heap space**. When `main()` method is found at line 1, *Java* **Runtime** creates stack memory to be used by main() method thead.
