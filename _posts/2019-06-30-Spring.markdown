@@ -254,10 +254,730 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 public class myTest {
     public static void main(String[] args){
-        ApplicationContext context = new ClassPathXmlApplicationContext( "bean.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("bean.xml");
         Hello hello = (Hello) context.getBean("Hello");
         System.out.println(hello.toString());
     }
 }
 ```
+#### Spring Configuration
+
+1. ailas
+    By using ailas, the constructor can be called by another name. Adding a extra line in the `xml` and we can use the ailas. 
+
+    ```xml
+    <alias name="Hello" alias="hhhh"/>
+    ```
+
+    ```java
+    ublic class myTest {
+    public static void main(String[] args){
+        ApplicationContext context = new ClassPathXmlApplicationContext( "bean.xml");
+        Hello hello = (Hello) context.getBean("hhhh");
+        System.out.println(hello.toString());
+        }
+    }
+    ```
+    And the output is also
+
+    ```java
+    Hello{str='Spring'}
+
+    ```
+
+    Also, using `name` in the properties can be called.
+
+    ```xml
+    <bean id="Hello" class="Hello" name="sk">
+    ```
+    Then test it using "sk"
+    ```java
+    ublic class myTest {
+    public static void main(String[] args){
+        ApplicationContext context = new ClassPathXmlApplicationContext( "bean.xml");
+        Hello hello = (Hello) context.getBean("sk");
+        System.out.println(hello.toString());
+        }
+    }
+    ```
+    The outout is also:
+
+    ```java
+    Hello{str='Spring'}
+
+    ```
+2. Import
+
+    Assume that there is a team colarborating with each other to exploit, `import` can combine the beans to be a whole entity. Usually, different beans are in charge of different part of calsses, and the configurations are rendered in different beans. We can combine these beans to be a whole configuration file.
+
+    In the `applicationContext.xml`, there imports other three beans:
+
+    ```xml
+        <?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+        <import resource="bean.xml"/>
+        <import resource="bean1.xml"/>
+        <import resource="bean2.xml"/>
+    </beans>
+    ```
+
+### Dependency Input
+
+Through **Set**:
+
++ Dependencies: The creation of Bean objects is depended on the container
++ Input: The properties of Bean objects are depended on the container
+
+For example:
+
+There are classes named `students` and `Adrress` having complcated types,
+
+```java
+import javafx.beans.property.Property;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class student {
+
+    private String name;
+    private Address address;
+    private  String[] books;
+    private List<String> hobbys;
+    private Map<String,String> card;
+    private Set<String> games;
+    private String wife;
+    private Property info;
+
+    @Override
+    public String toString() {
+        return "student{" +
+                "name='" + name + '\'' +
+                ", address=" + address +
+                ", books=" + Arrays.toString(books) +
+                ", hobbys=" + hobbys +
+                ", card=" + card +
+                ", games=" + games +
+                ", wife='" + wife + '\'' +
+                ", info=" + info +
+                '}';
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public void setBooks(String[] books) {
+        this.books = books;
+    }
+
+    public void setHobbys(List<String> hobbys) {
+        this.hobbys = hobbys;
+    }
+
+    public void setCard(Map<String, String> card) {
+        this.card = card;
+    }
+
+    public void setGames(Set<String> games) {
+        this.games = games;
+    }
+
+    public void setWife(String wife) {
+        this.wife = wife;
+    }
+
+    public void setInfo(Object info) {
+        this.info.setValue(info);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public String[] getBooks() {
+        return books;
+    }
+
+    public List<String> getHobbys() {
+        return hobbys;
+    }
+
+    public Map<String, String> getCard() {
+        return card;
+    }
+
+    public Set<String> getGames() {
+        return games;
+    }
+
+    public String getWife() {
+        return wife;
+    }
+
+    public Object getInfo() {
+        return info.getName();
+    }
+
+    public Property infoProperty() {
+        return info;
+    }
+}
+```
+Class `Addess`:
+```java
+public class Address {
+    private String address;
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "address='" + address + '\'' +
+                '}';
+    }
+}
+
+```
+The properties of complicated types can be demonstrated as follows:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="address" class="Address" name="sk">
+           <property name="address" value="SH"/>
+    </bean>
+    <bean id="student" class="student" name="student2">
+        <property name="name" value="danny"/>
+        <property name="address" ref="address"/>
+        <!--Array-->
+        <property name="books">
+            <array>
+                <value>Harri Porter</value>
+                <value>Red Mansion</value>
+                <value>Gone With the Wind</value>
+            </array>
+        </property>
+        <!--List-->
+        <property name="hobbys">
+            <list>
+                <value>Music</value>
+                <value>Reading</value>
+            </list>
+        </property>
+        <!--Map-->
+        <property name="card">
+            <map>
+                <entry key="ID" value="111111111"/>
+                <entry key="BankCard" value="00000000"/>
+            </map>
+        </property>
+        <!--Set-->
+        <property name="games">
+            <set>
+                <value>LOL</value>
+                <value>CF</value>
+            </set>
+        </property>
+        <!--NULL-->
+        <property name="wife">
+            <null></null>
+        </property>
+        <!--Properties-->
+        <property name="info">
+            <props>
+                <prop key="IDcard">10010</prop>
+                <prop key="sex">Male</prop>
+            </props>
+        </property>
+    </bean>
+
+    <!-- more bean definitions for data access objects go here -->
+
+</beans>
+```
+
+### Scope of dependencies
+
+When you create a bean definition, you create a recipe for creating actual instances of the class defined by that bean definition. The idea that a bean definition is a recipe is important, because it means that, as with a class, **you can create many object instances from a single recipe**.
+
+You can control not only the **various dependencies and configuration values that are to be plugged into an object that is created from a particular bean definition but also control the scope of the objects created from a particular bean definition**. This approach is powerful and flexible, because you can choose the scope of the objects you create through configuration instead of having to bake in the scope of an object at the Java class level. Beans can be defined to be deployed in one of a number of scopes. The Spring Framework supports **six scopes**, four of which are available only if you use a web-aware `ApplicationContext`. You can also create a custom scope.
+
+<img src="D:\zwh52\Documents\myBlog\beanscope.png" alt="beanscope"  />
+
++ Singleton(default)
+
+    ![SINGLETON](D:\zwh52\Documents\myBlog\SINGLETON.png)
+
+    ```xml
+    <bean id="accountService" class="com.something.DefaultAccountService"/>
+    <!-- the following is equivalent, though redundant (singleton scope is the default) -->
+    <bean id="accountService" class="com.something.DefaultAccountService" scope="singleton"/>
+    ```
+
++ Prototype
+
+    ```xml
+    <bean id="accountService" class="com.something.DefaultAccountService" scope="prototype"/>
+    ```
+
+![prototype](D:\zwh52\Documents\myBlog\prototype.png)
+
+### Auto-configuration
+
+    ```xml
+    <bean id="cat" class="cat">
+        <property name="name" value="ROll"/>
+    </bean>
+    <bean id="dag" class="dog">
+        <property name="name" value="WangCai"/>
+    <!--
+        byName: will find the context in the container where the `bean id` is the same as the the object's `set()` method  
+        byType: will find the context in the container where the class is the same as the the object class.  
+    -->
+    <bean id="people" class="people" autowire="byName">
+        <property name="name" value="Danny"/>
+    </bean>
+    ```
+
+ + **ByName** autowire
+
+ It needs to ensure that the `id` of all the `beans` are sole, and this bean needs to be kept consistent with the **value** of the `setter`'s property  taht is automatically inputted. 
+
+ + **ByType** autowire
+
+ It needs to ensure that the `class` of all the `beans` are sole, and this bean needs to be kept consistent with the **class's** property  taht is automatically inputted. 
+
+## Annotation-based Container Configuration
+
+ The introduction of annotation-based configuration raised the question of whether **this approach is “better” than XML**. The short answer is “it depends.” The long answer is that each approach has its pros and cons, and, usually, it is up to the developer to decide which strategy suits them better. Due to the way they are defined, annotations provide a lot of context in their declaration, leading to **shorter and more concise configuration**. However, `XML` excels at wiring up components without touching their source code or recompiling them. Some developers prefer having the wiring close to the source while others argue that annotated classes are no longer POJOs and, furthermore, that the configuration becomes decentralized and harder to control.
+
+ No matter the choice, Spring can accommodate both styles and even mix them together. It is worth pointing out that through its `JavaConfig` option, Spring lets annotations be used in a non-invasive way, without touching the target components source code and that, in terms of tooling, all configuration styles are supported by the Spring Tools for Eclipse.
+
+ 1. Import constraint: **context** constraint
+ 2. Configurate the annotation suport: context:annotation-config/
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:annotation-config/>
+
+</beans>
+```
+### @Autowired Annotation & @Qualifier
+ For example, in the previous instance, we can add `@Autowired` annotation before the objects creation. Besides, if one `@Autowired` cannot finish assemble the objects, we can add `@Qualifier(Value="XXX")` to configurate the use of `@Autowired`, and determine one only **bean object**:
+
+ ```java
+ import org.springframework.beans.factory.annotation.Autowired;
+
+ public class people {
+    @Autowired
+    @Qualifier(Value="cat111")
+    private cat Cat;
+    @Autowired
+    @Qualifier(Value="dog222")
+    private dog Dog;
+    private String name;
+ 
+ ```
+
+ In the `beans.xml`, the code can be simplified:
+
+ ```xml
+    <bean id="cat" class="cat"/>
+    <bean id="cat111" class="cat"/>
+    <bean id="dag" class="dog"/>
+    <bean id="dag222" class="dog"/>
+
+    <bean id="people" class="people" autowire="byName">
+        <property name="name" value="Danny"/>
+    </bean>
+ ```
+
+### @Resource Annotation
+
+ ```java
+ public class people {
+    @Resource
+    private cat Cat;
+    @Resource
+    private dog Dog;
+    private String name;
+ ```
+
+ + The differences between `@Resource` and `@Autowired` 
+    + They can both be applied in the process of automatical configuration, and can both be put at the property configurations.
+    + `@Autowired` is realized through `byName`, and the corresponding object must exist.
+    + `@Resource` is realized through `byName` by default, if it cannot find the key words, it will realize through `byType`. If both of the two method cannot find, it will generate an error.
+    + The execution order of there two methods are various: `@Autowired` by `byType` while `@Resource` by `byName` in default.
+    + `@Nullable` can make the instance to be **NULL**.
+
+### @Component Annotation
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        https://www.springframework.org/schema/context/spring-context.xsd">
+    <!--
+        To scan the particular package, 
+        and the annotations below these packages will work
+        -->
+    <context:component-scan base-package="com.danny"/>
+    <context:annotation-config/>
+
+</beans>
+```
+The `@Component` makes the auto-generation. And `@Value("XXX")` assign the value to the object.
+```java
+package com.danny.proj;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+//Equals to <bean id="user" class="com.Danny.poroj.User">
+@Component
+public class User {
+    public String name;
+    //Equals <property name="name" value="Danny"/>
+    @Value("Danny")
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
++ Derived annotations:
+    + dao: `@Repository`
+    + service: `@Service`
+    + controller: `@Controller`
+
+
+### Java Configuration
+
+Project class:
+```java
+@Component
+public class User {
+    private String name;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    //Equals <property name="name" value="Danny"/>
+    @Value("Danny")
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+```
+
+Configuration class:
+```java
+@Configuration //This annotation means the class will be collocated by the spring container.
+// And be injected into the container. Because itself is a @Component, the same as beans,xml
+public class hhhConfig {
+    @Bean //Sign up for a bean, it is the same as a bean tag
+          //The name of this method is the same as "id" in the bean
+          //The return value of this method is the "class" property the bean tag.
+    public static User user(){
+        return new User();
+    }
+}
+```
+Testing class:
+```java
+import com.danny.config.hhhConfig;
+import com.danny.proj.User;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class myTest {
+    public static void main(String[] args){
+        ApplicationContext context = new AnnotationConfigApplicationContext(hhhConfig.class);
+        User user = (User) context.getBean("user()");
+//        System.out.println(getUser.getname());
+        System.out.println(user.getName());
+    }
+}
+```
+
+# AOP - Aspect Oriented Programming with Spring
+
+(additional reference: https://www.tutorialspoint.com/springaop/springaop_overview.htm) 
+!(https://www.tutorialspoint.com/springaop/springaop_overview.htm)
+
+**Aspect-oriented Programming (AOP)** complements **Object-oriented Programming (OOP) by** providing another way of thinking about program structure. The key unit of modularity in **OOP** is the class, whereas in AOP the unit of modularity is the **aspect**. Aspects enable the modularization of concerns (such as transaction management) that cut across multiple types and objects. (Such concerns are often termed “crosscutting” concerns in AOP literature.)
+
+One of the key components of Spring is the **AOP framework**. While the Spring IoC container does not depend on AOP (meaning you do not need to use AOP if you don’t want to), AOP complements Spring IoC to provide a very capable middleware solution.
+
+The key unit of modularity in OOP is the class, whereas in AOP the unit of modularity is the **aspect**. Dependency Injection helps you decouple your application objects from each other, while AOP helps you **decouple cross-cutting** concerns from the objects that they affect. AOP is like triggers in programming languages such as Perl, .NET, Java, and others.
+
+Spring AOP module lets interceptors intercept an application. For example, when a method is executed, you can **add extra functionality before or after the method execution**.
+
+## Core Concepts in AOP
+
+Before we start working with **AOP**, let us become familiar with the AOP concepts and terminologies. These terms are not specific to Spring, rather they are related to AOP.
+
+|Aspect  |	A module which has a set of APIs providing cross-cutting requirements. For example, a logging module would be called AOP aspect for logging. An application can have any number of aspects depending on the requirement.|
+|Join point  |	This represents a point in your application where you can plug-in AOP aspect. You can also say, it is the actual place in the application where an action will be taken using Spring AOP framework.|
+|Advice  |	This is the actual action to be taken either before or after the method execution. This is the **actual piece of code that is invoked during program execution by Spring AOP framework.|
+|PointCut    |	This is a set of one or more joinpoints where an advice should be executed. You can specify PointCuts using expressions or patterns as we will see in our AOP examples.|
+|Introduction    |	An introduction allows you to add new methods or attributes to existing classes.|
+|Target object   |	The object being advised by one or more aspects. This object will always be a proxied object. Also referred to as the advised object.|
+|AOP proxy   |	An object created by the AOP framework in order to implement the aspect contracts (advise method executions and so on). In the Spring Framework, an AOP proxy is a JDK dynamic proxy or a CGLIB proxy.|
+Weaving     |	Weaving is the process of linking aspects with other application types or objects to create an advised object. This can be done at compile time, load time, or at runtime.|
+
+### Using Spring to Configurate Aop
+
+To configure a log to a particular methods, it can apply AOP in spring to gnerate a pointcut. 
+
+In the Maven dependencies, except the basic `org.springframework` depndency, there needs a special dependency called `org.aspectj`.
+
+```xml
+<dependency>
+    <groupId>org.aspectj</groupId>
+    <artifactId>aspectjweaver</artifactId>
+    <version>1.9.4</version>
+</dependency>
+```
+
+In the parent interface, there are three methods to be implimented:
+
+```java
+public interface UserService {
+    public void add();
+    public void delete();
+    public void update();
+    public void select();
+}
+```
+To implement theses methods,
+
+```java
+public class UserServiceTmp1 implements UserService {
+
+
+    public void add() {
+        System.out.println("Add one client");
+    }
+
+    public void delete() {
+        System.out.println("Delete one client");
+    }
+
+    public void update() {
+        System.out.println("Update one client");
+    }
+
+    public void select() {
+        System.out.println("Select one client");
+    }
+}
+```
+Then, there will create a `AfterLog` class to inspect the execution of the code:
+
+```java
+import org.springframework.aop.MethodBeforeAdvice;
+
+import java.lang.reflect.Method;
+
+public class log  implements MethodBeforeAdvice {
+    //method: the executable target's method
+    //args: Arguments
+    //target: The target object
+    public void before(Method method, Object[] args, Object target) throws Throwable{
+        System.out.println(target.getClass().getName()+" " + method.getName()+ " has been executed.");
+    }
+}
+```
+
+There is also a `BeforeLog` class:
+
+```java
+import org.springframework.aop.MethodBeforeAdvice;
+
+import java.lang.reflect.Method;
+
+public class log  implements MethodBeforeAdvice {
+    //method: the executable target's method
+    //args: Arguments
+    //target: The target object
+    public void before(Method method, Object[] args, Object target) throws Throwable{
+        System.out.println(target.getClass().getName()+" " + method.getName()+ " has been executed.");
+    }
+}
+```
+In the `applicationContext.xml`, there should configureate the `Spring` Aop:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop
+        https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="userService" class="com.Danny.service.UserServiceTmp1"/>
+    <bean id="log" class="com.Danny.log.log"/>
+    <bean id="afterLog" class="com.Danny.log.AfterLog"/>
+
+    <!--Method 1: Use original Spring API Interface-->
+    <!--Configurate aop-->
+    <aop:config>
+        <!--pointCut and its location-->
+        <aop:pointcut id="pointcut" expression="execution(* com.Danny.service.UserServiceTmp1.*(..))"/>
+
+        <!--Advisor increase-->
+        <aop:advisor advice-ref="log" pointcut-ref="pointcut"/>
+        <aop:advisor advice-ref="afterLog" pointcut-ref="pointcut"/>
+    </aop:config>
+</beans>
+```
+
+Finally, the output of the log is the following: 
+
+```
+com.Danny.service.UserServiceTmp1 add has been executed.
+Add one client
+addMethodhas been executed and the returning value is null
+```
+
+### Self-defined Aop
+
+We can also define the point cut and the aspect by ourself.
+
+Firstly, create a diy class which defines self-defined pointcuts to execute.
+
+```java
+public class DiyPointCut {
+    public void before(){
+        System.out.println("====Before execution====");
+    }
+    public void after(){
+        System.out.println("====After execution====");
+    }
+}
+```
+Then, in the `applicationContext.xml`, we can configurate the pointcut,
+
+```xml
+<!--Self-defined Pointcut, ref: the referred class-->
+    <aop:config>
+        <aop:aspect ref="diy">
+            <!--Point Cut-->
+            <aop:pointcut id="point" expression="execution(* com.Danny.service.UserServiceTmp1.*(..))"/>
+            <!--Aspect-->
+            <aop:before method="before" pointcut-ref="point"/>
+            <aop:after method="after" pointcut-ref="point"/>
+        </aop:aspect>
+    </aop:config>
+```
+The out put looks like the following:
+
+```
+====Before execution====
+Add one client
+====After execution====
+```
+
+### Annotation Aop Configuation
+
+In the `applicationContext.xml`, add a configuration code:
+
+```xml
+ <!--Annotation Aop-->
+    <bean id="annotationPointCut" class="com.Danny.diy.annotationPointCut"/>
+    <aop:aspectj-autoproxy/>
+```
+
+In the pointcut class, we can use `@Aspect` annotation to implicate the pointcut class, and we can annotate the `@Before` or `@After` method to execute. The `@Around` can  both execute the after method and the before method.
+
+```java
+import org.aspectj.lang.annotation.After;
+import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Around;
+
+@Aspect //To annotate this is a pointcut
+public class annotationPointCut {
+
+    @Before("execution(* com.Danny.service.UserServiceTmp1.*(..))")
+    public void before(){
+        System.out.println("====Before execution====");
+    }
+
+    @After("execution(* com.Danny.service.UserServiceTmp1.*(..))")
+    public  void after(){
+        System.out.println("====After execution====");
+    }
+}
+
+    @Around("execution(* com.Danny.service.UserServiceTmp1.*(..))")
+    //In the Around type, we can give a parameter to determine the point cut
+    public void around(ProceedingJoinPoint jp) throws Throwable{
+        System.out.println("Before around");
+        Object proceed = jp.proceed(); //Execute the method
+        System.out.println("After around");
+        Signature signature = jp.getSignature();//get Signature
+        System.out.println("signature: " + signature);
+        System.out.println(proceed);
+    }
+```
+
+Output is the following:
+
+```
+Before around
+====Before execution====
+Add one client
+====After execution====
+After around
+signature: void com.Danny.service.UserService.add()
+null
+```
+
 
