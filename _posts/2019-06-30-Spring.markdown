@@ -526,11 +526,11 @@ When you create a bean definition, you create a recipe for creating actual insta
 
 You can control not only the **various dependencies and configuration values that are to be plugged into an object that is created from a particular bean definition but also control the scope of the objects created from a particular bean definition**. This approach is powerful and flexible, because you can choose the scope of the objects you create through configuration instead of having to bake in the scope of an object at the Java class level. Beans can be defined to be deployed in one of a number of scopes. The Spring Framework supports **six scopes**, four of which are available only if you use a web-aware `ApplicationContext`. You can also create a custom scope.
 
-<img src="D:\zwh52\Documents\myBlog\beanscope.png" alt="beanscope"  />
+![BEANSCOPE](https://thumbnail0.baidupcs.com/thumbnail/0887fa486qccb2942a6b9561e87e9615?fid=156850721-250528-477468679693565&time=1595836800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-gy4FSuW9lSb0TymhmwPKeFs11yY%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4840294956942370272&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 
 + Singleton(default)
 
-    ![SINGLETON](D:\zwh52\Documents\myBlog\SINGLETON.png)
+    ![SINGLETON](https://thumbnail0.baidupcs.com/thumbnail/0887fa486qccb2942a6b9561e87e9615?fid=156850721-250528-477468679693565&time=1595836800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-gy4FSuW9lSb0TymhmwPKeFs11yY%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4840317173723535588&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 
     ```xml
     <bean id="accountService" class="com.something.DefaultAccountService"/>
@@ -544,7 +544,7 @@ You can control not only the **various dependencies and configuration values tha
     <bean id="accountService" class="com.something.DefaultAccountService" scope="prototype"/>
     ```
 
-![prototype](D:\zwh52\Documents\myBlog\prototype.png)
+![prototype](https://thumbnail0.baidupcs.com/thumbnail/6b4692be2k9896928ee5e1a6686e45e5?fid=156850721-250528-155704978471242&time=1595836800&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-2xhwdj2p365hakYl3Ful%2FiqYhKs%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4840329398313108792&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
 
 ### Auto-configuration
 
