@@ -376,5 +376,499 @@ The principle of autoConfiguration:
 
 `xxxProperties`: The relating attributes in the encapsulated configuration files.
 
+### Injecting Property Values
+
+Basically, once the `application.properties` or other customized `application.properties` has been loaded, you can inject values with the placeholder `${}`.
+
+In the main application where you run your `SpringApplication`, you can inject them easily with `@Value("${<some-expression>}")`. For example:
+
+inside application.properties:
+
+```
+app.my.name=jason
+```
+then in your main application:
+
+```java
+@Value("${app.my.name}")
+private String appName;
+```
+However, in some other places, besides the main application, you might need to **specify your `application.properties` file again before injecting the `@Value`.** For example, in a `@Configuration` file at some other place in your project hierarchy:
+
+```java
+@Configuration
+@PropertySource("classpath:application.properties")
+public class MainConfig {
+    @Bean
+    public ProfileManager profileManager(@Autowired Environment env, @Value("${app.testname}") String s) {
+        return new ProfileManager(env,s);
+    }
+}
+```
+
+You can also use this to calculate expressions, which will require `#{}`instead of `${}` for `@Value()`. For example:
+
+```java
+@Value(#{app.my.age*2})
+private int age;
+```
+
+#### Binding with a Customized yml or properties file
+
+You can also also specify a customized properties file for **constructor injection or property bindings**. The basic annotations and syntax are the same as above, except that you need to specify that customized `yml` or `properties` file with `@PropertySource()`. For example:
+
+```java
+@PropertySource(value="classpath: customizedPropertyFile")
+@ConfigurationProperties(prefix="person1")
+public class Person
+    ...
+```
 
 
+
+
+
+## SpringBoot Features
+
+
+The `SpringApplication` class provides a convenient way to bootstrap a Spring application that is started from a `main()` method. In many situations, you can delegate to the static `SpringApplication.run` method, as shown in the following example:
+```java
+public static void main(String[] args) {
+	SpringApplication.run(MySpringConfiguration.class, args);
+}
+```
+
+
+When your application starts, you should see something similar to the following output:
+
+```java
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.3.0.RELEASE)
+
+2020-06-16 15:35:35.216  INFO 47936 --- [  restartedMain] App                                      : Starting App on XY-Laptop with PID 47936 (E:\Maven Workspace\testSpringBoot\target\classes started by 26238 in E:\Maven Workspace\testSpringBoot)
+2020-06-16 15:35:35.218  INFO 47936 --- [  restartedMain] App                                      : No active profile set, falling back to default profiles: default
+2020-06-16 15:35:35.248  INFO 47936 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2020-06-16 15:35:35.248  INFO 47936 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2020-06-16 15:35:36.345  INFO 47936 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2020-06-16 15:35:36.351  INFO 47936 --- [  restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2020-06-16 15:35:36.351  INFO 47936 --- [  restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.35]
+2020-06-16 15:35:36.399  INFO 47936 --- [  restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2020-06-16 15:35:36.399  INFO 47936 --- [  restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 1151 ms
+2020-06-16 15:35:36.504  INFO 47936 --- [  restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-06-16 15:35:36.588  INFO 47936 --- [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2020-06-16 15:35:36.623  INFO 47936 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2020-06-16 15:35:36.630  INFO 47936 --- [  restartedMain] App                                      : Started App in 1.652 seconds (JVM running for 1.947)
+
+```
+### Startup Failures
+
+If your application fails to start, registered FailureAnalyzers get a chance to provide a dedicated error message and a concrete action to fix the problem. For instance, if you start a web application on port 8080 and that port is already in use, you should see something similar to the following message:
+```java
+
+***************************
+APPLICATION FAILED TO START
+***************************
+Description:
+Embedded servlet container failed to start. Port 8080 was already in use.
+Action:
+Identify and stop the process that's listening on port 8080 or configure this
+application to listen on another port.
+```
+
+If no failure analyzers are able to handle the exception, you can still display the full conditions report to better understand what went wrong. To do so, you need to enable the debug property or enable DEBUG logging for `org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener`.
+
+For instance, if you are running your application by using java -jar, you can enable the debug
+property as follows:
+
+```shell
+$ java -jar myproject-0.0.1-SNAPSHOT.jar --debug
+```
+
+
+
+## SpringBoot Web
+
+Spring Boot is well suited for web application development. You can create a self-contained `HTTP` server by using embedded **Tomcat, Jetty, Undertow, or Netty**. Most web applications use the **springboot-starter-web** module to get up and running quickly. You can also choose to build reactive web applications by using the **spring-boot-starter-webflux** module.
+
+### Spring Web MVC Framework
+The **Spring Web MVC framework** (often referred to as simply “Spring MVC”) is a rich “model view controller” web framework. Spring MVC lets you create special `@Controller` or `@RestController` beans to handle incoming `HTTP` requests (`@Controller` would be returning data that is being rendered by view, and `@RestController` would be returning raw data). Methods in your controller are mapped to HTTP by using `@RequestMapping` annotations.
+
+The following code shows a typical `@RestController` that serves `JSON` data (by default):
+
+```java
+@RestController
+@RequestMapping(value="/users")
+public class MyRestController {
+	@RequestMapping(value="/{user}", method=RequestMethod.GET)
+	public User getUser(@PathVariable Long user) {	// objects returned are turned into JSON format
+		// ...
+	}
+
+	@RequestMapping(value="/{user}/customers", method=RequestMethod.GET)
+	List<Customer> getUserCustomers(@PathVariable Long user) {
+		// ...
+	}
+
+	@RequestMapping(value="/{user}", method=RequestMethod.DELETE)
+	public User deleteUser(@PathVariable Long user) {
+		// ...
+	}
+}
+```
+
+Spring MVC is part of the core Spring Framework, and detailed information is available in the [reference documentation](https://docs.spring.io/spring/docs/5.2.6.RELEASE/spring-framework-reference/web.html#mvc). There are also several guides that cover Spring MVC available at [spring.io/guides](https://spring.io/guides).
+
+### Spring Boot Framework
+
+Since Spring Boot has all those **AutoConfiguration** classes doing the configuration work for us, it is much simpler and faster for us to develop a web application using Spring Boot. In summary, all we need to do is:
+
++ Create a Spring Boot project (if you use **Spring Initialzr**, you will see that it is based on Spring Boot) with your desired dependencies
++ Spring Boot will load all those **AutoConfiguration files**, which you can further customize using `application.properties` or `application.yml`
+Write your own program
++ The most important step is to understand the **mechanism behind AutoConfiguration**, which uses the **xxxAutoConfiguration** classes that has properties injected (identified with a certain prefix).
+
+### Spring Boot Web Application Project Structure
+
+**WebJars**
+
+WebJars is simply taking the concept of a `JAR` and applying it to client-side libraries or resources. For example, the `jQuery` library may be packaged as a `JAR` and made available to your `Spring MVC` application. There are several benefits to using WebJars, including support for Java build tools such as Gradle and Maven.
+
+For Spring Boot to load and later package your web contents correctly, you need to add your contents at a correct place. If you look into your `WebMVCAutoConfiguration` class, you will see the following method:
+
+```java
+public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    if (!this.resourceProperties.isAddMappings()) {
+        logger.debug("Default resource handling disabled");
+    } else {
+        Duration cachePeriod = this.resourceProperties.getCache().getPeriod();
+        CacheControl cacheControl = this.resourceProperties.getCache().getCachecontrol().toHttpCacheControl();
+        if (!registry.hasMappingForPattern("/webjars/**")) {
+            this.customizeResourceHandlerRegistration(registry.addResourceHandler(new String[] "/webjars/**"}).addResourceLocations(new String[]{"classpath:/META-INF/resources/webjars/"}).setCachePeriod(this.getSeconds(cachePeriod)).setCacheControl(cacheControl));
+        }
+
+        String staticPathPattern = this.mvcProperties.getStaticPathPattern();
+        if (!registry.hasMappingForPattern(staticPathPattern)) {
+            this.customizeResourceHandlerRegistration(registry.addResourceHandler(new String[]{staticPathPattern}).addResourceLocations(WebMvcAutoConfiguration.getResourceLocations(this.resourceProperties.getStaticLocations())).setCachePeriod(this.getSeconds(cachePeriod)).setCacheControl(cacheControl));
+        }
+
+    }
+}
+```
+
+So you see that all your web contents need to be placed in classpath:`/META-INF/resources/webjars/ directory`. This means that within your project, any file stored under `/META-INF/resources/webjars/` can be visited by `localhost:<yourPort>/webjars/<filePath>`
+
+For example, on the https://www.webjars.org/ you can choose which webjars to import into your project by copying the following to your pom file.
+
+```xml
+<dependency>
+    <groupId>org.webjars</groupId>
+    <artifactId>bootstrap</artifactId>
+    <version>4.0.0</version>
+</dependency>
+```
+
+Then in your external dependency, you can see that it also has the structure mentioned above, and you can visit its resources with `localhost:8080/webjars/bootstrap/4.0.0/webjars-requirejs.js`, for example. Then you will see that `js` file displayed:
+
+```javaScript
+/*global requirejs */
+
+// Ensure any request for this webjar brings in jQuery.
+requirejs.config({
+  paths: { 
+    "bootstrap": webjars.path("bootstrap", "js/bootstrap"),
+    "bootstrap-css": webjars.path("bootstrap", "css/bootstrap")  
+  },
+  shim: { "bootstrap": [ "jquery" ] }
+});
+```
+
+**Static contents**
+
+In the same method where you find those webjar structure, you can also find where you should store your static contents:
+
+```java
+String staticPathPattern = this.mvcProperties.getStaticPathPattern();
+                if (!registry.hasMappingForPattern(staticPathPattern)) {
+                    this.customizeResourceHandlerRegistration(registry.addResourceHandler(new String[]{staticPathPattern}).addResourceLocations(WebMvcAutoConfiguration.getResourceLocations(this.resourceProperties.getStaticLocations())).setCachePeriod(this.getSeconds(cachePeriod)).setCacheControl(cacheControl));
+                }
+```
+
+which finds your resource under the following directories:
+
+```
+"classpath:/META-INF/resources/", 
+"classpath:/resources/", 
+"classpath:/static/", 
+"classpath:/public/"
+"/" (project root path)
+```
+
+This means that if a request is not handled, you will be redirected to the static files under those locations.
+
+For example, if you have an html page under the following directory:
+
+![hrmlpage](https://jasonyux.github.io/2020/06/29/SpringBoot-Manual/staticdirectory.png)
+
+Then you can visit the html by `localhost:8080/signin/index.html`.
+
+**Welcome Page**
+
+Welcome page is basically the **home page of your application**. Spring Boot also has a default mapping defined in the `WebMvcAutoConfiguration` class:
+
+```java
+@Bean
+public WelcomePageHandlerMapping welcomePageHandlerMapping(ApplicationContext applicationContext, FormattingConversionService mvcConversionService, ResourceUrlProvider mvcResourceUrlProvider) {
+    WelcomePageHandlerMapping welcomePageHandlerMapping = new WelcomePageHandlerMapping(new TemplateAvailabilityProviders(applicationContext), applicationContext, this.getWelcomePage(), this.mvcProperties.getStaticPathPattern());
+    welcomePageHandlerMapping.setInterceptors(this.getInterceptors(mvcConversionService, mvcResourceUrlProvider));
+    welcomePageHandlerMapping.setCorsConfigurations(this.getCorsConfigurations());
+    return welcomePageHandlerMapping;
+}
+```
+
+This in the end will look for `index.html` below all static content directories mentioned above, and maps to `/`.**
+
+For example, if you have the following structure:
+
+![html](https://jasonyux.github.io/2020/06/29/SpringBoot-Manual/homepagedirectory.png)
+
+Then you can visit this `index.html` by `localhost:8080/`
+
+**Configure Your Web Properties**
+
+If you want to customize those locations, you can also use the `spring.resources.xxx` to modify the default paths scanned.
+
+This works because in the `ResoucrProperties` class, Spring Boot defines locations for scanning static resources as shown below:
+
+```java
+@ConfigurationProperties(
+    prefix = "spring.resources",
+    ignoreUnknownFields = false
+)
+public class ResourceProperties {
+    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = new String[]{"classpath:/META-INF/resources/", "classpath:/resources/", "classpath:/static/", "classpath:/public/"};
+```
+
+This means you can change those locations by specifying in your `application.properties` or `applications.yml`:
+
+```
+spring.resources.static-locations=classpath:/hello/, classpath:/example
+```
+
+### Banner page and Web icon cumstomization
+
+There are four static resources :
+
++ public
++ static
++ template
++ resources
+
+You can put your `index.html` in either of these files.
+
+To set customized web icon, you can put your onw ico in the `public` resource, Then, set the `spring.mvc.favicon.enable=false` in the `application.properties`.  
+
+
+### Importing Thymeleaf
+
+Since we are using Spring Boot with Maven, it is easy to include `thymeleaf` into your project. If you have already inherited the parent `spring-boot-starter`, then you just need to include the following dependency in your `pom`:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+</dependency>
+```
+However, this uses the version 2.3.1 (specified in the parent pom). It is recommended to use thymeleaf 3 or above for more functionalities. To do this, you need to configure the properties in your pom.
+
+```xml
+<properties>
+    <!-- This is how you change your Thymeleaf version -->
+	<thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
+    <thymeleaf-layout-dialect.version>2.1.1</thymeleaf-layout-dialect.version>
+</properties>
+```
+**Using Thymeleaf**
+
+The simplest example of using Thymeleaf would be to return an html page upon a request.
+
+If we look into the `ThymeleafProperties` class (located in `SpringBootAutoConfigure` jar, under the folder `thymeleaf`), you will see:
+
+```java
+@ConfigurationProperties(
+    prefix = "spring.thymeleaf"
+)
+public class ThymeleafProperties {
+    private static final Charset DEFAULT_ENCODING;
+    public static final String DEFAULT_PREFIX = "classpath:/templates/";
+    public static final String DEFAULT_SUFFIX = ".html";
+    private boolean checkTemplate = true;
+    private boolean checkTemplateLocation = true;
+    private String prefix = "classpath:/templates/";
+    private String suffix = ".html";
+    private String mode = "HTML";
+    ...
+```
+where
+
+```java
+public static final String DEFAULT_PREFIX = "classpath:/templates/";
+public static final String DEFAULT_SUFFIX = ".html";
+```
+means that **Thymeleaf scans through classpath:`/templates/` for files ending with `.html` to be rendered**.
+
+Now, to hand you back a html page based on request using Thymeleaf, all you need to do is **add a html page with the same return result as your html in your templates folder**:
+
+For example, if you have:
+
+![structure](https://jasonyux.github.io/2020/06/29/SpringBoot-Manual/thymeleaf-html.png)
+Then your handler could look like:
+
+```java
+@Controller
+public class HTMLRequests {
+    @RequestMapping("/getHtmlPage")
+    public String testHTMLRequest(){
+        return "request1";  // this has to be the same as the html file name
+    }
+}
+```
+ + Note:
+ Now you should not use a @RestController, since it will automatically use the @ResponceBody which will render the page by Spring Boot itself instead of by Thymeleaf
+
+For more information, you can follow the official [thymeleaf guide](https://www.thymeleaf.org/).
+
+1. th:xxx
+
+    If you place th:<xxx> inside any html tag, where <xxx> could be any HTML property (including text, class, id, etc.), then Thymeleaf will replace the original value with the value you specified. For example, you can replace the text appearing in a div with:
+    
+    ```html
+    <!-- Value placed would be parsed as a key, whose value you need to specifiy in your Handler method -->
+    <div th:text="${Hello}">
+        Original Text
+    </div>
+    ```
+
+    and the corresponding Java class could look like:
+
+    ```java
+@Controller
+public class HTMLRequests {
+    @RequestMapping("/getHtmlPage")
+    public String testHTMLRequest(Map<String, String> map1){
+        map1.put("Hello","Value Retrieved from key Hello");	// the value will be retrieved
+        
+        return "request1";  // this tells you which html file to return
+    }
+}
+    ```
+2. Precendence
+
+    Since there is no notion of code precedence in html, if we specified multiple th:xxx within the same tag, collision will happen. To solve this, Thymeleaf defines its own precedence rule:
+    ![presence RUle](https://jasonyux.github.io/2020/06/29/SpringBoot-Manual/thymeleaf-precedence.png)
+
+3. Thymeleaf Expressions
+
+    + Simple expressions:
+        + **Variable Expressions**: ${...}
+            + can be used to read/store objects, and invoking certain methods on them
+        + **Selection Variable Expressions**: *{...}
+            + mainly used in combination with th:object, which stores an object in the current scope
+            + then using *{...} will select/read a certain attribute of that stored object
+        + **Message Expressions**: #{...}
+            + used for internationalization
+        + **Link URL Expressions**: @{...}
+            + used for generating dynamic URL addresses
+            + for example:
+            ```html
+            <!-- Will produce 'http://localhost:8080/gtvg/order/details?orderId=3' (plus rewriting) -->
+            <a href="details.html" th:href="@{http://localhost:8080/gtvg/order/details(orderId=${o.id})}">view</a>
+
+            <!-- Will produce '/gtvg/order/details?orderId=3' (plus rewriting) -->
+            <a href="details.html" th:href="@{/order/details(orderId=${o.id})}">view</a>
+            ```
+        + **Fragment Expressions**: ~{...}
+            + this will be talked about later 
+    + **Literals**:
+        + Text literals: 'one text' , 'Another one!' ,…
+        + Number literals: 0 , 34 , 3.0 , 12.3 ,…
+        + Boolean literals: true , false
+        + Null literal: null
+        + Literal tokens: one , sometext , main ,…
+    + **Text operations**:
+        + String concatenation: +
+        + Literal substitutions: |The name is ${name}|
+    + **Arithmetic operations**:
+        + Binary operators: + , - , * , / , %
+        + Minus sign (unary operator): -
+    + **Boolean operations**:
+        + Binary operators: and , or
+        + Boolean negation (unary operator): ! , not
+    + **Comparisons and equality**:
+        + Comparators: > , < , >= , <= ( gt , lt , ge , le )
+        + Equality operators: == , != ( eq , ne )
+    + **Conditional operators**:
+        + If-then: (if) ? (then)
+        + If-then-else: (if) ? (then) : (else)
+            + same as Java tertiary operation
+        + Default: (value) ?: (defaultvalue)
+    + **Special tokens**:
+        + No-Operation: _
+
+    (For more information, please visit Chapter 4 of the [Thymeleaf Documentation](https://www.thymeleaf.org/doc/tutorials/3.0/usingthymeleaf.html))
+
+
+    Example:
+
+    In your Java program, you can have:
+
+    ```java
+    @Controller
+    public class HTMLRequests {
+        @RequestMapping("/getHtmlPage")
+        public String testHTMLRequest(Map<String, String> map1, Map<String, Object> map2){
+            map1.put("Hello","<h3>Value Retrieved from key Hello with h3 heading<h3>");
+
+            String[] names = {"jason","michael","bowen"};
+            List users = Arrays.asList(names);
+            map2.put("Users",users);
+            return "request1";
+        }
+    }
+    ```
+    In your html code, you can have:
+
+    ```html
+    <!DOCTYPE html>
+    <html lang="en" xmlns:th="http://www.thymeleaf.org">    <!-- Adding this line enables syntax correction/suggestion -->
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <body>
+        <h1>Test Request</h1>
+        <p> A paragraph here </p>
+        <!-- th:text configures/replaces the text appearing in the div to display value that maps to key=hello -->
+        <!-- th:utext does not translate html element tags, which means if you had h1 tag in your value, it will be displayed as h1 -->
+        <div th:utext="${Hello}">Original text</div>
+        <hr/>
+
+        <!-- This for each will generate multiple h5 tags -->
+        <h5 th:text="${user}" th:each="user:${Users}"></h5>
+        <hr/>
+
+        <h5>
+            <span th:each="user:${Users}">[[${user}]] </span>
+        </h5>
+
+    </body>
+    </html>
+    ```
+    where
+
+    + th:each can be seen as a for loop iteration, that does the work of for element: iterable.
+    + [[${}]] is the inline version of th:text=${}. [(${})] is the inline version of th:utext="${}"
