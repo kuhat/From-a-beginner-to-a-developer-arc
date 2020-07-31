@@ -449,7 +449,7 @@ ca.crt:     1025 bytes
 ```
 Next, there will be serveral tokens generated, input on of them, then, we will enter the dashboard.
 
-![Kubernetes Dashboard](https://sh-download-ipv6.ftn.qq.com/ftn_handler/03fab46b14ac23d5d28750a5559b6eea74a18590af0a2b9d4539f989fa1deb5e0f7106c86d023aee68aee233bc60f365e2fcf082af90aee5c6c71386507b9b81/?fname=*.png&pictype=scaled&size=1024*768)
+![Kubernetes Dashboard](https://img-blog.csdnimg.cn/20200731154637575.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70)
 <center>Kubernetes dashboard</center>
 
 ### Expose Applications

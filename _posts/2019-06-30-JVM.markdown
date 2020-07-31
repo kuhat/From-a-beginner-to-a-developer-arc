@@ -89,7 +89,7 @@ In terms of actual, **Method area** is like **Heap**, is the memory that threads
 
 For example, an demo Java program describing the memory distribution is demonstrated below:
 
-![Memory Distribute](https://thumbnail0.baidupcs.com/thumbnail/aa8115deat38e60f269649a20ee55c56?fid=156850721-250528-38848721365388&time=1595480400&rt=sh&sign=FDTAER-DCb740ccc5511e5e8fedcff06b081203-aYiTV%2Bs31Mxs%2B8TWYvKFmBj7i2Q%3D&expires=8h&chkv=0&chkbd=0&chkpc=&dp-logid=4744662211405976814&dp-callid=0&size=c710_u400&quality=100&vuk=-&ft=video)
+![Memory Distribute](https://img-blog.csdnimg.cn/20200731161959837.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70)
 <center>Memory Distribution</center>
 
 + As soon as we run the program, it loads all the **Runtime classes** into the **Heap space**. When `main()` method is found at line 1, *Java* **Runtime** creates stack memory to be used by main() method thead.
@@ -100,9 +100,9 @@ For example, an demo Java program describing the memory distribution is demonstr
 + `foo()` method is terminated in line8, at this time memory block allocated for foo() in stack becomes free.
 + in line 9, main() method terminates and the stack memory created for main() method is destroyed. Also, the program ends at this line. Hence, *Java* **Runtime** frees all the memory and end the execution of the program.  
 
- ## Java Garbage Collection 
+## Java Garbage Collection 
 
- ### Automatic Garbage Collection
+### Automatic Garbage Collection
 
  The **automatic garbage collection mechanism** is a process of looking at heap memory, distinguishing between objects in use and unused objects, and deleting unused objects. As for using objects or referencing objects, it means that your program holds a reference to that object. For unused or unreferenced objects, no part of your program holds a reference.Therefore, the memory used by unreferenced objects can be recycled.
 
@@ -112,26 +112,26 @@ For example, an demo Java program describing the memory distribution is demonstr
 
  The first step is marking, which distinguishes which memory is in use and which is not.
 
- ![step1](https://images0.cnblogs.com/blog/488573/201312/04221055-47252cfb3e8f4060812243592b244a76.jpg)
+ ![step1](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWFnZXMwLmNuYmxvZ3MuY29tL2Jsb2cvNDg4NTczLzIwMTMxMi8wNDIyMTA1NS00NzI1MmNmYjNlOGY0MDYwODEyMjQzNTkyYjI0NGE3Ni5qcGc?x-oss-process=image/format,png)
  <center>Marking</center>
 
-Referenced objects are identified in blue and unreferenced objects in gold. In the **marking** phase, it will scan all objects and determine. If all objects in the system are to be scanned, this step can be time-consuming.
+ Referenced objects are identified in blue and unreferenced objects in gold. In the **marking** phase, it will scan all objects and determine. If all objects in the system are to be scanned, this step can be time-consuming.
 
-+ Step 2: Deleting normally
+ + Step 2: Deleting normally
 
-Remove the unreferenced objects and leave the referenced objects and the free pointers.
+ Remove the unreferenced objects and leave the referenced objects and the free pointers.
 
-![Normal deletion](https://images0.cnblogs.com/blog/488573/201312/04221753-85c9f7c269d140cdb3bbd202ffcdf132.jpg)
-<center>Normal Deletion</center>
+ ![Normal deletion](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWFnZXMwLmNuYmxvZ3MuY29tL2Jsb2cvNDg4NTczLzIwMTMxMi8wNDIyMTc1My04NWM5ZjdjMjY5ZDE0MGNkYjNiYmQyMDJmZmNkZjEzMi5qcGc?x-oss-process=image/format,png)
+ <center>Normal Deletion</center>
 
-The memory allocator holds references to free memory, which is linked to a List and can be allocated to new objects when needed.
+ The memory allocator holds references to free memory, which is linked to a List and can be allocated to new objects when needed.
 
-+ Step 3: Deleting With Compacting
+ + Step 3: Deleting With Compacting
 
-To further improve performance, in addition to removing unreferenced objects, users can also **compress live referenced objects**. Moving reference objects together makes it faster and easier to allocate new memory.
+ To further improve performance, in addition to removing unreferenced objects, users can also **compress live referenced objects**. Moving reference objects together makes it faster and easier to allocate new memory.
 
-![Deleting with compacting](https://images0.cnblogs.com/blog/488573/201312/04222251-8a02d426974645648a61f444a844b3e6.jpg)
-<center>Deleting With Compacting</center>
+ ![Deleting with compacting](https://imgconvert.csdnimg.cn/aHR0cHM6Ly9pbWFnZXMwLmNuYmxvZ3MuY29tL2Jsb2cvNDg4NTczLzIwMTMxMi8wNDIyMjI1MS04YTAyZDQyNjk3NDY0NTY0OGE2MWY0NDRhODQ0YjNlNi5qcGc?x-oss-process=image/format,png)
+ <center>Deleting With Compacting</center>
 
 ### Steps of GC (Garbage Collection)
 

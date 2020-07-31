@@ -682,6 +682,14 @@ Since we are using Spring Boot with Maven, it is easy to include `thymeleaf` int
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-thymeleaf</artifactId>
 </dependency>
+ <dependency>
+    <groupId>org.thymeleaf</groupId>
+    <artifactId>thymeleaf-spring5</artifactId> 
+</dependency>
+<dependency>
+    <groupId>org.thymeleaf.extras</groupId>
+     <artifactId>thymeleaf-extras-java8time</artifactId>
+</dependency>
 ```
 However, this uses the version 2.3.1 (specified in the parent pom). It is recommended to use thymeleaf 3 or above for more functionalities. To do this, you need to configure the properties in your pom.
 
@@ -738,7 +746,7 @@ public class HTMLRequests {
 }
 ```
  + Note:
- Now you should not use a @RestController, since it will automatically use the @ResponceBody which will render the page by Spring Boot itself instead of by Thymeleaf
+ Now you should not use a `@RestController`, since it will automatically use the `@ResponceBody` which will render the page by Spring Boot itself instead of by Thymeleaf
 
 For more information, you can follow the official [thymeleaf guide](https://www.thymeleaf.org/).
 
@@ -872,3 +880,231 @@ public class HTMLRequests {
 
     + th:each can be seen as a for loop iteration, that does the work of for element: iterable.
     + [[${}]] is the inline version of th:text=${}. [(${})] is the inline version of th:utext="${}"
+
+### Internalization
+
+To enable your website to **show contents in different languages** based on users’ preferences (e.g. browser language used), you need to use **internationalization**(i18n), which is supported by Spring Boot. (In Spring MVC, this is configured by `MessageResouce` class. However, in Spring Boot, it is configured automatically with `MessageSourceAutoConfiguration`.)
+
+In summary, you need to do the following steps:
+
++ Create a new folder under your `resource` folder, in which you will store all your **internationalization properties file**.
+
++ Create properties file in the format of `<xxx>.properties`, which will be used as the default properties file for that specific page xxx (for example).
+
++ Create other properties file in the format of `<xxx>_<language>_<CountryCode>.properties`. In this way, IntelliJ will recognize them, knowing that you are doing internationalization.
+
++ Now, since IntelliJ recognized them as internationalization files, you can use the `Resource Bundle` option when editing your properties file.
+
++ After configuring your properties file, **you need to specify the base path** (e.g. a property under the location `resources/i18n/login_en_US.properties` have the base path of `i18n.login` ) of your properties file with `spring.messages.basename=<yourBasePath>` in your `application.properties`.
++ Finally, you just need to go to your html page and use the thmeleaf messages expression `#{...}` (for example, if you had a property named `login.title=...` in your `login_en_US.properties` file, you should use `#{login.title}` to render your message expression text automatically based on your browser language.
+
+For example:
+
+if you have done step 1-4 correctly, you should be working like this:
+
+![internalization](https://jasonyux.github.io/2020/06/29/SpringBoot-Manual/interationalization-example.png)
+<center>Internalization Property Files</center>
+
+ Note:
+
+ + If you used Chinese in your properties files, and you get unreadable codes, you might need to change your decoding to enable ASCII conversion. For example, you can try the following:
+
+![text encoding](https://jasonyux.github.io/2020/06/29/SpringBoot-Manual/change_encoding.png)
+<center>Text Encoding Setting</center>
+
+If you want to achieve the language swapping **by a button on your page**, you need to use the `LocaleResolver` class (also inside the `MessageResouceAutoConfiguration` class).
+
+By default, this works by getting the section Accept-Language in the request header when you send your html request. To override this behavior, you need to write your own `LocaleResolver` class.
+
+For example,
+
+firstly, in your html page, you would have a button that creates those request with language:
+
+```html
+<!-- this will be parsed as index.html?l=zh_CN, where index.html would be this same page -->
+<... th:href="@{/index.html(l="zh_CN")}">中文</...>
+<... th:href="@{/index.html(l="en_US")}">English</...>
+```
+In your MyLocaleResolver class, you can write:
+
+```java
+public class MyLocaleResolver implements LocaleResolver{
+    @Override
+    public Locale resolveLocale(HttpServletRequest request){
+        String lang = request.getParameter("l"); // getting the information l=zh_Ch from the request, for example
+        Locale locale = Locale.getDefault(); // if there is none, then gets the default Locale information
+        if(!StringUtils.isEmpty(l)){
+            String[] split = l.split("_"); // gets the language and country code
+            locale = new Locale(split[0]. split[1]);
+        }
+        return locale;
+    }
+    
+    @Override 
+    public void setLocale(...){
+        ...
+    }
+}
+```
+
+Add this component to your application as a bean. This is because the Spring Boot `LocaleResolver` is injected with the condition: `@ConditionalOnMissingBean`, meaning that if we injected this bean, then Spring Boot’s default resolver will not be activated:
+
+```java
+// in one of your `@Configuration` class, for example
+@Bean
+public LocaleResolver localeResolver(){
+    return new MyLocaleResolver();
+}
+```
+Sending and Handling Post Request
+To handle a user login, for example, you need to do two parts (in abstract).
+
+First, in your `HTML` page, you need to send a request `(th:action="@{<xxx>}")` with your form, in which you have each field that you need to be set with a specific name=xxx attribute.
+
+Then, you add a handler to with `PostController()` to map to that request, and gets the value in those fields with `@RequestParam("<xxx>") String xxx`.
+For example:
+
+
+In your html page, you can have:
+
+```html
+<form class="..." action="..." th:action="@{/user-login}" method="post">
+    ...
+    <input type="..." class="..." placeholder="..." name="username">
+    <input type="..." class="..." placeholder="..." name="password">
+    ...
+</form>
+```
+In your Java class, you can have:
+```java
+@Controller
+public class LoginController{
+    // same as @RequestMapping(method=RequestMethod.POST)
+    @PostMapping(value="/user-login")
+    public String login(@RequestParam("username") String username,
+                       @RequestParam("password") String password){
+        ... // your logic to check those username and passwords
+        return "dashboard"	// the page in templates folder that you want to show to logged in users
+    }
+}
+```
+
+ Note:
+ + If hot swapping is not working (assuming you have enabled it) when you changed those static/templates html code, you should try:
+     + add the line **spring.thymeleaf.cache=false** in your `application.properties` file
+     + use `Ctrl+F9` or manually click the build button to rebuild your project
+
+If you want to add the functionality of popping up red text in your html page with Login Failed when your user failed the authentication, you can use the th:if functionality with some small changes to your controller code:
+
+In your controller:
+
+```java
+@Controller
+public class LoginController{
+    // same as @RequestMapping(method=RequestMethod.POST)
+    @PostMapping(value="/user-login")
+    public String login(@RequestParam("username") String username,
+                       @RequestParam("password") String password
+                       Map<String, String> errmsg){
+        ... // your logic to check those username and passwords
+        if(failed to authenticate){
+            errmsg.put("msg","Login Failed");
+            return "login" // your original page
+        }
+        return "dashboard"	// the page in templates folder that you want to show to logged in users
+    }
+}
+```
+Then in your html code, you can have:
+
+```html
+<!-- For example, you can place in inside the form you use to submit login information -->
+<p style="color: red" th:text="${msg}" th:if="not #strings.isEmpty(msg)"></p>
+```
+### Spring Boot MVC Extensions
+
+Spring Boot provides auto-configuration for **Spring MVC** that works well with most applications. The auto-configuration adds the following features on top of Spring’s defaults:
+
++ Inclusion of `ContentNegotiatingViewResolver` and `BeanNameViewResolver` beans.
++ Support for serving static resources, including support for `WebJars` (covered before)).
++ Automatic registration of **Converter**, **GenericConverter**, and **Formatter** beans.
+ + For example, converting an object to json format
++ Support for HttpMessageConverters.
+ + For example, converts and handles http request
++ Automatic regis tration of `MessageCodesResolver` (covered later in this document).
++ Static `index.html` support (covered before)
++ Custom Favicon support
++ Automatic use of a `ConfigurableWebBindingInitializer` bean.
+
+If you want to **keep those Spring Boot MVC customizations and make more MVC customizations** (interceptors, formatters, view controllers, and other features), you can add your own **`@Configuration` class of type WebMvcConfigurer but without `@EnableWebMvc`**.
+
+If you want to provide custom instances of `RequestMappingHandlerMapping`, `RequestMappingHandlerAdapter`, or `ExceptionHandlerExceptionResolver`, and still keep the Spring Boot MVC customizations, you can declare a bean of type `WebMvcRegistrations` and use it to provide custom instances of those components.
+
+If you want to take complete control of Spring MVC, you can add your own **`@Configuration` annotated with `@EnableWebMvc`**, or alternatively add your own **`@Configuration-annotated` `DelegatingWebMvcConfiguration` as described in the Javadoc of `@EnableWebMvc`**.
+
+**Example: Adding a ViewController**
+
+If you want to control a certain request to show the output of another request, you can use a `ViewController` to control the view of a page. However, by default Spring Boot does not have `AutoConfiguration` classes for that. Therefore, you would need to add your own `ViewController` by “**adding your own `@Configuration` class of type `WebMvcConfigurer` but without `@EnableWebMvc`“** (mentioned above).
+
+For instance, to map the request /request to request1 (which you specified as a html page configured by Thymeleaf), you need to write the configuration class:
+
+```java
+@Configuration
+public class myMVCExtensionConfig implements WebMvcConfigurer {
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/request").setViewName("request1");
+    }
+}
+```
+
+#### Mechanism
+
+Since `WebMvcAutoConfiguration` is the `AutoConfiguration` class for Spring MVC, we can look into that class to understand those extension mechanisms. Within that class, you will see:
+
+```java
+@Import({WebMvcAutoConfiguration.EnableWebMvcConfiguration.class})
+@EnableConfigurationProperties({WebMvcProperties.class, ResourceProperties.class})
+@Order(0)
+public static class WebMvcAutoConfigurationAdapter implements WebMvcConfigurer {
+    ...
+}
+```
+
+Which imports `WebMvcAutoConfiguration.EnableWebMvcConfiguration.class`, and that class extends `DelegatingWebMvcConfiguration` by having the following signature:
+```java
+public static class EnableWebMvcConfiguration extends DelegatingWebMvcConfiguration implements ResourceLoaderAware {
+```
+
+Finally, in the parent class, you will see:
+
+```java
+@Autowired(
+    required = false
+)	// since it is AutoWired, those configures are obtained from the IoC container
+public void setConfigurers(List<WebMvcConfigurer> configurers) {
+    if (!CollectionUtils.isEmpty(configurers)) {
+        this.configurers.addWebMvcConfigurers(configurers);
+    }
+
+}
+
+protected void addViewControllers(ViewControllerRegistry registry) {
+    this.configurers.addViewControllers(registry);
+}
+```
+And finally if we trace the configureViewResolvers method, we will see:
+```java
+public void addViewControllers(ViewControllerRegistry registry) {
+    Iterator var2 = this.delegates.iterator();
+
+    while(var2.hasNext()) {
+        WebMvcConfigurer delegate = (WebMvcConfigurer)var2.next();
+        delegate.addViewControllers(registry);	// calls the method addViewControllers on each WebMvcConfigurer class
+        										// and add them to the registry object
+    }
+
+}
+```
+
+This is why we needed to **extend `WebMvcConfigurer` class for extending its functionality**, add calling the method `addViewControllers()` in the above example to add our `ViewController`.
