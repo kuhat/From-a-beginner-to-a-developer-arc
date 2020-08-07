@@ -1,0 +1,69 @@
+---
+layout: post
+title:  "General Description"
+description: An introduction of what docker is.
+date:   2020-07-09 21:03:36 +0530
+---
+This post is a general start guidance pf Mybatis.
+
+# Introduction
+
+**What is MyBatis?**
+
+MyBatis is a first class persistence framework with support for custom SQL, stored procedures and advanced mappings. MyBatis eliminates almost all of the JDBC code and manual setting of parameters and retrieval of results. MyBatis can use simple XML or Annotations for configuration and map primitives, Map interfaces and Java POJOs (Plain Old Java Objects) to database records.
+
+# Getting Started
+
+## Installation
+
+To use MyBatis you just need to include the `mybatis-x.x.x.jar` file in the classpath.
+
+If you are using Maven just add the following dependency to your `pom.xml`:
+
+```xml
+<dependency>
+  <groupId>org.mybatis</groupId>
+  <artifactId>mybatis</artifactId>
+  <version>x.x.x</version>
+</dependency>
+```
+
+**Building SqlSessionFactory from XML**
+
+Every MyBatis application centers around an instance of `SqlSessionFactory`. A `SqlSessionFactory` instance can be acquired by using the `SqlSessionFactoryBuilder`. `SqlSessionFactoryBuilder` can build a `SqlSessionFactory` instance from an `XML` configuration file, or from a custom prepared instance of the Configuration class.
+
+Building a `SqlSessionFactory` instance from an `XML` file is very simple. It is recommended that you use a classpath resource for this configuration, but you could use any `InputStream` instance, including one created from a literal file path or a `file://` URL. MyBatis includes a utility class, called **Resources**, that contains a number of methods that make it simpler to load resources from the classpath and other locations.
+
+```java
+String resource = "org/mybatis/example/mybatis-config.xml";
+InputStream inputStream = Resources.getResourceAsStream(resource);
+SqlSessionFactory sqlSessionFactory =
+  new SqlSessionFactoryBuilder().build(inputStream);
+```
+
+The configuration `XML` file contains settings for the core of the MyBatis system, including a DataSource for acquiring database Connection instances, as well as a `TransactionManager` for determining how transactions should be scoped and controlled. The full details of the `XML` configuration file can be found later in this document, but here is a simple example: 
+
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+  <mappers>
+    <mapper resource="org/mybatis/example/BlogMapper.xml"/>
+  </mappers>
+</configuration>
+```
+
+While there is a lot more to the XML configuration file, the above example points out the most critical parts. Notice the `XML` header, required to validate the XML document. The body of the environment element contains the environment configuration for transaction management and connection pooling. The mappers element contains a list of mappers – the XML files and/or annotated Java interface classes that contain the SQL code and mapping definitions. 
