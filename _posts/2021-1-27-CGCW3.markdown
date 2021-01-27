@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Python Socket programming-Routing Algorithm"
+title: "OpenGl 3D modelling project"
 date: 2020-12-22 13:32:20 +0300
 description: This is a report for 3D modeling project using freeglut. # Add post description (optional)
 ---
@@ -181,5 +181,7 @@ light blue which is the same as the sky. Besides, colour materials are enabled t
 
   <center> Image21: stage3 with lighting and fog</center>
 
-## The codes are demonstrated below:
+## The resources can be accessed below:
+https://download.csdn.net/download/Hhhhhaohao/14944522?spm=1001.2014.3001.5503
+
 

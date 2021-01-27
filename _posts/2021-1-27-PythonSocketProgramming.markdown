@@ -109,7 +109,7 @@ Once a peer is online, `file_info_sender` on this peer will set a connection wit
 
 UDP socket protocol is used in both file transferring and file information sharing among peers due to its relatively fast transmission speed and connectionless technique. Two ports are used in  this application, which are respectively in charge of sending file information and transferring file.
 
-<img src="D:\zwh52\coursework\sem5\CAN201\protocol Activity Diagram.jpg" alt="protocol Activity Diagram" style="zoom:;" />
+![](https://img-blog.csdnimg.cn/20210127163644501.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70)
 
 # 4. implementation
 
@@ -120,7 +120,8 @@ UDP socket protocol is used in both file transferring and file information shari
    + As the FSM (Finite State Machine) demonstrates below, firstly, `zip_new_file` with check the local file number with peer file number. If local file number is more than peer file number which indicate new files are added into `./share` folder, then, newly added files will be compressed into a whole zip file, and `add_times` is increased by one. 
    + If file number is equal to peer side and no `modified_file_name` found, it will enter the next phase. To filter updated file, it checks continuous file modify time with a time interval of 1 second. If the two modify time of one file is not the same which indicates changes have occurred in this file, it will update `modified_file_name`, send it to peers and compress the updated file, finally plus `add_times` by one to wait for other peers retrieve the file.
 
-   <img src="C:\Users\pc\AppData\Roaming\Typora\typora-user-images\image-20201221124406340.png" alt="image-20201221124406340" style="zoom: 80%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127163814810.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" style="zoom:67%;" />
+
 
    <center>Image 1: FSM of new_file_detector</center>
 
@@ -129,7 +130,7 @@ UDP socket protocol is used in both file transferring and file information shari
    + Once the application is started, it will pack the file number, `file_names` dictionary, `add_times` and send them to peers if them are online.
    + Also, to update `modified_file_name` if other peer find updated file, it can receive the modified_file_name sent by other peers.
 
-   <img src="C:\Users\pc\AppData\Roaming\Typora\typora-user-images\image-20201221172935340.png" alt="image-20201221172935340" style="zoom:;" />
+   <img src="https://img-blog.csdnimg.cn/20210127163849181.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" style="zoom:;" />
 
    <center>Image 2: FSM of file_info_sender</center>
 
@@ -139,7 +140,7 @@ UDP socket protocol is used in both file transferring and file information shari
    + If the number of files `filenames` and that in peer's folder along with a larger add_times value which indicates that there finds partially updated file, then start a `client` thread to retrieve the updated file. 
    + If the number of file in `filenames` is zero and `add_times` in peer side is larger than local `add_times`, which indicates this machine has been restarted, then compare the number of files in peer side and that in the local side, if there are more files in peer side, then start a `client` thread to download them.
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\subdiagram1 Activity Diagram1.jpg" alt="subdiagram1 Activity Diagram1" style="zoom:150%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127163924887.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="subdiagram1 Activity Diagram1" style="zoom:150%;" />
 
    <center>Image 3: FSM of file_downloader</center>
 
@@ -148,13 +149,13 @@ UDP socket protocol is used in both file transferring and file information shari
    +  It firstly parse the message coming from the requesting peers, then according to the file download request, it divides the whole requested file into blocks.
    +  It then transmit the file block to the requiring peer.
 
-   <img src="C:\Users\pc\AppData\Roaming\Typora\typora-user-images\image-20201221172959927.png" alt="image-20201221172959927"  />
+   <img src="https://img-blog.csdnimg.cn/20210127163956695.png"  />
 
    <center>Image 4: FSM of server thread</center>
 
 5. To download the new files from peer side, `client` thread is initialized to retrieve zipped files in peer's `./zip` into its own `./download` folder, and then unzip the zip package to its `./share` folder. 
 
-   ![image-20201221173032909](C:\Users\pc\AppData\Roaming\Typora\typora-user-images\image-20201221173032909.png)
+   ![image-20201221173032909](https://img-blog.csdnimg.cn/20210127164026208.png)
 
    <center>Image 5: FSM of client thread</center>
 
@@ -197,7 +198,7 @@ mkdir -p /home/tc/workplace/cw1
 
 To remotely run the code, Xftp is applied to transfer `main.py` to `./workplace`. And Xftp is applied to remotely control the VMs. After the preparing of running environment, the working directory shown in Xshell is the image shown below:
 
-<img src="D:\zwh52\coursework\sem5\CAN201\testingImage\working_directory.PNG" alt="working_directory" style="zoom: 67%;" />
+<img src="https://img-blog.csdnimg.cn/20210127164100438.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="working_directory" style="zoom: 67%;" />
 
 <center>Image  : Working directory shown in Xshell</center>
 
@@ -218,37 +219,37 @@ After preparing the working environment, code is tested step by step.
 
 2. Use soft link command to link a test file with around 10 MB with `./share` folder on VM1. After the operation, the file is compressed into `./zip` folder.
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\testingImage\add_testImage_to_machine1.PNG" alt="add_testImage_to_machine1" style="zoom: 67%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127164126332.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" style="zoom: 67%;" />
 
 <center>Image  : Link a file to ./share folder on VM1</center>
 
 3. Start VM2, it will get this test file.
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\testingImage\start_peer2&get_testImage.PNG" alt="start_peer2&get_testImage" style="zoom: 67%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127164146655.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" style="zoom: 67%;" />
 
 <center>Image  :Start VM2 and retreive the file</center>
 
 4. Start VM3, testfile is also sent to peer3.
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\testingImage\start_peer3&get_testImage.PNG" alt="start_peer3&get_testImage" style="zoom: 67%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127164205540.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" style="zoom: 67%;" />
 
    <center>Image  : Start VM3 and get the file</center>
 
 5. Add one Videos and folder with 50 small files of size 650 MB to the `./share` folder of VM2. And VM3 will get the test video. After 2 seconds, kill the process in VM1. 
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\VM3getVideo.PNG" alt="VM3getVideo" style="zoom:67%;" />
+   <img src="https://img-blog.csdnimg.cn/2021012716424718.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="VM3getVideo" style="zoom:67%;" />
 
    <center>Image  : VM3 get the folder and </center>
 
 6. Restart VM1, and it will get the files since last offline.
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\restartVM1getVideo.PNG" alt="restartVM1getVideo" style="zoom: 67%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127164322912.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="restartVM1getVideo" style="zoom: 67%;" />
 
 <center>Image  : Restart VM1 and get files</center>
 
 7. Add a test `.txt` file in `./share` folder of VM3, and it will be synchronized to VM1 and VM2. After the Partially update, peer1 and peer2 will get the newest version of the file and replace it with the old one.
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\VM2recieveUpdatedfile.PNG" alt="VM2recieveUpdatedfile" style="zoom:67%;" />
+   <img src="https://img-blog.csdnimg.cn/2021012716434461.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="VM2recieveUpdatedfile" style="zoom:67%;" />
 
    <center>Image  :Peers get the partially modified file</center>
 

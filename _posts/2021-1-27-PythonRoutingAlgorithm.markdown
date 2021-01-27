@@ -75,7 +75,7 @@ In this application, Iterative communication between nodes is required as a cons
 
 The finite state machine is shown below:
 
-![image-20210114132110764](C:\Users\pc\AppData\Roaming\Typora\typora-user-images\image-20210114132110764.png)
+![image-20210114132110764](https://img-blog.csdnimg.cn/20210127165624107.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70)
 
 <center>Image 1: FSM of the Program</center>
 
@@ -95,7 +95,7 @@ The finite state machine is shown below:
 
    The listener tries to receive news from peers, otherwise, it enters exception part where count down is in process. If the count down has surpassed time out limit, output file will be written. If there incomes neighbor's information, it firstly parse information to get peer node name `peer_node` and peer distance vector `peer_dv`. Then, it checks if there are new node in neighbor's DV that local DV does not maintain, and add the newly found node to `local_dict` and set the distance from local node to this newly found node to infinite. After that, it iterate through all the neighbor nodes in `local_dict` to apply relaxation function to check if the distance between this node and currently checked neighbor is greater than the sum of the distance from peer node to this node and the distance from peer node to currently checked neighbor. If the constraint is met, then it updates the `next_hop` to peer node and update the distance from local node to currently checked neighbor to nearer distance via peer node. Following the updating, it then send update news to neighbors. The above demonstrated process continues until time out, finally, it will write the converged output file. The whole process is demonstrated as image 2.
 
-<img src="C:\Users\pc\AppData\Roaming\Typora\typora-user-images\image-20210114151428200.png" alt="image-20210114151428200" style="zoom:150%;" />
+<img src="https://img-blog.csdnimg.cn/20210127165704637.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="image-20210114151428200" style="zoom:150%;" />
 
 <center>Image 2: FSM of File Listener</center>
 
@@ -115,19 +115,19 @@ The finite state machine is shown below:
 
 1. To test the application with proper environment, Linux-based operating system (Tiny Core) and python 3.6 are required to run the code. To simulate the real word operating condition, a node network containing 4 points is firstly tested. The graph is demonstrated below:
 
-<img src="D:\zwh52\coursework\sem5\CAN201\As2\model1.PNG" alt="model1" style="zoom:60%;" />
+<img src="https://img-blog.csdnimg.cn/20210127165734348.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="model1" style="zoom:60%;" />
 
 <center>Graph 1:Test case1 four Points Network</center>
 
 2. one `main.py` is utilized by `simultaneously-run.py` python script to run several times and each execution acts like a real router.  The content of `simultaneously-run.py` is shown below:
 
-<img src="D:\zwh52\coursework\sem5\CAN201\As2\simultaneously_run.PNG" alt="simultaneously_run" style="zoom:67%;" />
+<img src="https://img-blog.csdnimg.cn/20210127165753954.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="simultaneously_run" style="zoom:67%;" />
 
 <center>Image 3: Simultaneously-run.py</center>
 
 3. Then, the running environment is prepared by transferring files to virtual machine via Xftp. It is shown below by image 4.
 
- <img src="D:\zwh52\coursework\sem5\CAN201\As2\working_directory.PNG" alt="working_directory" style="zoom:75%;" />
+ <img src="https://img-blog.csdnimg.cn/20210127165819998.PNG" alt="working_directory" style="zoom:75%;" />
 
 <center>Image 4: Working Directory</center>
 
@@ -148,25 +148,25 @@ The finite state machine is shown below:
 
    After the convergence of result, each application's output is generated as `nodeName_output.json`. The output is demonstrated below:
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\As2\output.PNG" alt="output" style="zoom:75%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127165844492.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="output" style="zoom:75%;" />
 
    <center>Image 5: Output of 4 Nodes</center>
 
 5. After Testing four nodes with reliable performance, a network with nine nodes is tested in the same environment to examine the reliability of the system. Another five points: r, s, t, y, z are introduced into the original graph. The graph of 9 points is shown below:
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\As2\9pointsgraph.PNG" alt="9pointsgraph" style="zoom:60%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127165953204.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="9pointsgraph" style="zoom:60%;" />
 
    <center>Graph 2: Test case2 nine points network</center>
 
 6. Then, work space of nine points is implemented by adding other distance vectors and other IP information. The updated work space is shown below:
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\As2\9pointsWorkspace.PNG" alt="9pointsWorkspace" style="zoom:75%;" />
+   <img src="https://img-blog.csdnimg.cn/202101271659251.PNG" alt="9pointsWorkspace" style="zoom:75%;" />
 
    <center>Image 6: Work Space of Nine Points</center>
 
 7. After starting `simultaneously-run.py` the output is shown below:
 
-   <img src="D:\zwh52\coursework\sem5\CAN201\As2\output9points.PNG" alt="9pointsWorkspace" style="zoom:75%;" />
+   <img src="https://img-blog.csdnimg.cn/20210127170023204.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="9pointsWorkspace" style="zoom:75%;" />
 
    <center>Image 7: Output of Nine Points Network</center>
 
