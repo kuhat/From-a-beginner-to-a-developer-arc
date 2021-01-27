@@ -6,6 +6,7 @@ date:   2020-08-11 21:03:36 +0530
 ---
 
 This passage will give a comprehensive description of python crawler, including a web spider to crawl data and a data viewer to make data visible on a simple website(which will be demonstrated in the next episode).
+
 ## Overview
 
 To obtain the Top250 movie information on Douban:
@@ -1023,7 +1024,7 @@ after saving, the excel file is:
 ![excel](https://img-blog.csdnimg.cn/20200817171443379.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70#pic_center)
 
   
-
+==To be continued==
   
 
   

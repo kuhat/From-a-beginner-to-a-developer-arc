@@ -1108,3 +1108,178 @@ public void addViewControllers(ViewControllerRegistry registry) {
 ```
 
 This is why we needed to **extend `WebMvcConfigurer` class for extending its functionality**, add calling the method `addViewControllers()` in the above example to add our `ViewController`.
+
+### Working With JDBC
+
+Connecting to databases in Spring Boot is generally easy to do. All you need to make sure is that:
+
+ 1. Your IP address is valid for connection to your remote database (applies only if you are using a remote database)
+ 2. You configured your login credentials properly in `application.yml` or `application.properties`
+ 3. Finally you can just use aautowired DataSource object in Spring Boot to establish a connection.
+
+#### Adding JDBC in Maven Dependency
+
+To use JDBC, you need to add the following dependencies:
+
+```xml
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <scope>runtime</scope>
+</dependency>
+```
+
+#### Configuring Your Login Credentials
+
+You can configure your login credentials either in `application.yml` or in `application.properties`
+
+```yml
+spring:
+  datasource:
+    username: <login-username>
+    password: <login-password>
+    url: jdbc:mysql://<your-database-ip>:<your-database-port>/<database-name>
+    driver-class-name: com.mysql.cj.jdbc.Driver
+```
+#### Creating a Connection
+
+Since we are testing the connection for now (not using it yet), we can do this in our test class:
+
+```java
+@SpringBootTest
+class Testsb2ApplicationTests {
+    @Autowired
+    DataSource dataSource;	// the database connection object
+
+    @Test
+    void contextLoads() {
+        System.out.println(dataSource.getClass());
+        try {
+            Connection connection = dataSource.getConnection();
+            System.out.println(connection);
+            connection.close();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+}
+```
+
+And if things are running smoothly, you should get something like this:
+
+```
+2020-07-06 14:09:36.306  INFO 24324 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-07-06 14:09:37.972  INFO 24324 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+HikariProxyConnection@26391950 wrapping com.mysql.cj.jdbc.ConnectionImpl@18d86e4
+```
+
+ + Note:
+
+     + If you get connection errors, but you are certain that your login **username/password** are correct, then it could be that your machine’s IP address has not been approved in the SQL server (again, this should happen only if you are connecting to a remote database). To approve connections from your machine, you need to run the following commands in your SQL:
+
+ ```sql
+ CREATE USER '<your-username>'@'<your-machines-IP-address>' IDENTIFIED BY '<your-password>';
+ ```
+
+ then:
+ ```sql
+ GRANT ALL PRIVILEGES ON *.* TO '<your-username>'@'<your-machines-IP-address>' WITH GRANT OPTION;
+ ```
+
+ finally, to make sure those changes are updated:
+ 
+ ```sql
+ flush privileges;
+ ```
+
+#### pring Boot JDBC DataSource Mechanism
+
+How does all the above work? How to I now use that connection to run SQL queries and scripts?
+
+If you go to the `org.springframework.boot.autoconfigure.jdbc` package, you will see the class `DataSourceConfiguration.` Parts of that class is shown below:
+
+```java
+@Configuration(
+    proxyBeanMethods = false
+)
+@ConditionalOnMissingBean({DataSource.class})
+@ConditionalOnProperty(
+    name = {"spring.datasource.type"}
+)
+static class Generic {
+    Generic() {
+    }
+
+    @Bean
+    DataSource dataSource(DataSourceProperties properties) {
+        return properties.initializeDataSourceBuilder().build();	// notice the initializeDataSourceBuilder() method
+    }
+}
+```
+
+Now, if we trace that `initializeDataSourceBuilder()`, you will see:
+
+```java
+// A DataSourceBuilder object is returned, which contains all those login information
+// notice the create() method that is called
+public DataSourceBuilder<?> initializeDataSourceBuilder() {
+    return DataSourceBuilder.create(this.getClassLoader()).type(this.getType()).driverClassName(this.determineDriverClassName()).url(this.determineUrl()).username(this.determineUsername()).password(this.determinePassword());
+}
+```
+
+Another important class is `DataSourceAutoConfiguration`, which (as the name suggests) contains default configurations that Spring Boot uses, as well as telling your which configurations can be overridden in your `application.properties` or `application.yml` file. Part of the class is shown below:
+
+```java
+public class DataSourceAutoConfiguration {
+    public DataSourceAutoConfiguration() {
+    }
+
+    static class EmbeddedDatabaseCondition extends SpringBootCondition {
+        private static final String DATASOURCE_URL_PROPERTY = "spring.datasource.url";
+        private final SpringBootCondition pooledCondition = new DataSourceAutoConfiguration.PooledDataSourceCondition();
+```
+
+Lastly, for running scripts, if you go to `DataSourceInitialzer` class, you will see:
+
+```java
+class DataSourceInitializer {
+    ...
+    boolean createSchema() {
+        List<Resource> scripts = this.getScripts("spring.datasource.schema", this.properties.getSchema(), "schema");
+        if (!scripts.isEmpty()) {
+            if (!this.isEnabled()) {
+                logger.debug("Initialization disabled (not running DDL scripts)");
+                return false;
+            }
+
+            String username = this.properties.getSchemaUsername();
+            String password = this.properties.getSchemaPassword();
+            this.runScripts(scripts, username, password);
+        }
+
+        return !scripts.isEmpty();
+    }
+    
+    void initSchema() {
+        List<Resource> scripts = this.getScripts("spring.datasource.data", this.properties.getData(), "data");
+        if (!scripts.isEmpty()) {
+            if (!this.isEnabled()) {
+                logger.debug("Initialization disabled (not running data scripts)");
+                return;
+            }
+
+            String username = this.properties.getDataUsername();
+            String password = this.properties.getDataPassword();
+            this.runScripts(scripts, username, password);
+        }
+    }
+```
+
+This means that you can run scripts or data by specifying the property `spring.datasource.schema` or `spring.datasource.data`, or, if you names your scripts with `schema-<xxx>.sql` and `data-xxx.sql`, Spring Boot will automatically run those for you.
+
+==To be coutinued==
