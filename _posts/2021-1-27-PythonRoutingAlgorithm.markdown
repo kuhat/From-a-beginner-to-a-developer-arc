@@ -20,11 +20,13 @@ The Bellman-Ford algorithm operates over an given diagram, D, containing N nodes
 
 Below shows the relaxation equation:
 
+```
 def relax(u, v):
      if local_dict[key] > peer_dict[node_name] + peer_dict[key]:
                     local_dict[key] = peer_dict[node_name] + peer_dict[key]
                     next_hop = peer_node
                     distance = peer_dict[node_name] + peer_dict[key]
+```
 
 Bellman-Ford algorithm is recognized as decentralized algorithm for it computes the least-cost path from source node to other peer nodes in a repeated behavior. In this algorithm, there is no need to maintain the knowledge of the distance vector of the whole network nodes, every node can only get to know the information of its neighbor nodes at the beginning. After iterating through all the neighbors' information and updating the local distance vector, local node can know the existence of other node in the network, meanwhile, it knows the direction through which neighbor the packet is to be dropped to obtain the least cost path.
 
