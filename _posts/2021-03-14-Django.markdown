@@ -1,9 +1,13 @@
 ---
 layout: post
-title: "Python Socket programming-File Synchronization"
-date: 2021-3-3 13:32:20 +0300
-description: This is a guidance to start a web app with Dijango. # Add post description (optional)
+title: "Quick Guidance of Django"
+date: 2021-2-25 13:32:20 +0300
+description: These are the notes I arranged by reading the official documents. Hope you’ll find something useful! # Add post description (optional)
+img:  # Add image post (optional)
 ---
+This is a quik guidance to create an app with Django and python.
+
+
 # Overview
 
 Because Django was developed in a fast-paced newsroom environment, it was designed to make common Web-development tasks fast and easy. Here’s an informal overview of how to write a database-driven Web app with Django.
@@ -16,7 +20,7 @@ Because Django was developed in a fast-paced newsroom environment, it was design
 
 Besides, Django has a *url distributor*, its usage is to distribute requested URL to different *View*, and *View* request corresponding *Template* and *Model*. 
 
-![](https://images2017.cnblogs.com/blog/867021/201801/867021-20180116155153334-721949851.png)
+<img src="https://img-blog.csdnimg.cn/img_convert/ac831315289696da84a568a043450af9.png" alt="捕获" style="zoom:50%;" />
 
 <center>Model view of Djange</center>
 
@@ -67,13 +71,13 @@ By cmd:
 python manager.py runserver # 127.0.0.1:8000
 ```
 
-<img src="D:\zwh52\Pictures\BlogPhoto\捕获.PNG" alt="捕获" style="zoom:50%;" />
+<img src="https://img-blog.csdnimg.cn/20210314174538138.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="捕获" style="zoom:50%;" />
 
 <center>Image1: Start a Django project</center>
 
 You can also customize your port in configuration:
 
-<img src="D:\zwh52\Pictures\BlogPhoto\Confuguration.PNG" alt="Confuguration" style="zoom:60%;" />
+<img src="https://img-blog.csdnimg.cn/20210314174611441.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="Confuguration" style="zoom:60%;" />
 
 <center>Image2: Configure the running port</center>
 
@@ -122,7 +126,7 @@ To start this step, let's go to *Bootstrap*, and fetch a simple static *HTML* te
 
 
 
-<img src="D:\zwh52\Pictures\BlogPhoto\BootstrapHTML.PNG" style="zoom:60%;" />
+<img src="https://img-blog.csdnimg.cn/2021031417475822.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" style="zoom:60%;" />
 
 <center>HTML page of a "sign in" function</center>
 
@@ -143,17 +147,17 @@ urlpatterns = [
 
 This time, when we start running *Django* and access http://127.0.0.1:8000/login, we can obtain a page without any static templates:
 
-<img src="D:\zwh52\Pictures\BlogPhoto\LoginPageWithoutStatic.PNG" style="zoom:60%;" />
+<img src="https://img-blog.csdnimg.cn/20210314174842198.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" style="zoom:60%;" />
 
 <center>Login Page Without Static Files</center>
 
 Then, we need to guide into static files. To do this, we need to add a reference to the real path of static files in `settings.py`, and add static files directory.
 
-<img src="D:\zwh52\Pictures\BlogPhoto\Staticfiles.PNG" alt="Staticfiles" style="zoom: 50%;" />
+<img src="https://img-blog.csdnimg.cn/20210314174858528.PNG" alt="Staticfiles" style="zoom: 50%;" />
 
 <center>Static Files directory</center>
 
-<img src="D:\zwh52\Pictures\BlogPhoto\StaticFilesSettings.PNG" alt="StaticFilesSettings" style="zoom: 50%;" />
+<img src="https://img-blog.csdnimg.cn/20210314174912168.PNG" alt="StaticFilesSettings" style="zoom: 50%;" />
 
 <center>Add Static Files References in settings.py</center>
 
@@ -170,6 +174,6 @@ Finally, we can add link in the *HTML* page inside <head> to link the static fil
 
 After all these have done, we can then access the page with static files:
 
-<img src="D:\zwh52\Pictures\BlogPhoto\FinallygetStatic.PNG" alt="FinallygetStatic" style="zoom:60%;" />  
+<img src="https://img-blog.csdnimg.cn/20210314174931945.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="FinallygetStatic" style="zoom:60%;" />  
 
 <center>Finally Get Static Styles</center>
