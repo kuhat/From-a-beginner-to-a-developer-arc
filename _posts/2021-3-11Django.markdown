@@ -1,0 +1,175 @@
+---
+layout: post
+title: "Python Socket programming-File Synchronization"
+date: 2021-3-3 13:32:20 +0300
+description: This is a guidance to start a web app with Dijango. # Add post description (optional)
+---
+# Overview
+
+Because Django was developed in a fast-paced newsroom environment, it was designed to make common Web-development tasks fast and easy. Here’s an informal overview of how to write a database-driven Web app with Django.
+
+## MTV Pattern of Django
+
++ Model: In charge of Objects for operations and databases (ORM)
++ Template: In charge of show web pages to users.
++ View: In charge of operation logic, and call Model and Template at the right time.
+
+Besides, Django has a *url distributor*, its usage is to distribute requested URL to different *View*, and *View* request corresponding *Template* and *Model*. 
+
+![](https://images2017.cnblogs.com/blog/867021/201801/867021-20180116155153334-721949851.png)
+
+<center>Model view of Djange</center>
+
+## Quick Start
+
+### Install:
+
+```python
+pip install Django
+```
+
+### Project Structure:
+
+To Create project, by typing in the cmd:
+
+```bash
+django-admin startproject ProjectName
+```
+
+After Creating the project, the project is shown below:
+
+```
+mysite+
+	-manage.py # Files managed by Django
+	-mysite+
+		-_init_.py
+		-settings.py # Configuration files
+		-urls.py # Routing system, url configuration
+		-wsgi.py # The decided wsgi of the structure
+```
+
+These files are:
+
+- The outer `mysite/` root directory is a container for your project. Its name doesn’t matter to *Django*; you can rename it to anything you like.
+- `manage.py`: A command-line utility that lets you interact with this Django project in various ways. You can read all the details about `manage.py` in [django-admin and manage.py](https://docs.djangoproject.com/en/3.1/ref/django-admin/).
+- The inner `mysite/` directory is the actual Python package for your project. Its name is the Python package name you’ll need to use to import anything inside it (e.g. `mysite.urls`).
+- `mysite/__init__.py`: An empty file that tells Python that this directory should be considered a Python package. If you’re a Python beginner, read [more about packages](https://docs.python.org/3/tutorial/modules.html#tut-packages) in the official Python docs.
+- `mysite/settings.py`: Settings/configuration for this Django project.  [Django settings](https://docs.djangoproject.com/en/3.1/topics/settings/) will tell you all about how settings work.
+- `mysite/urls.py`: The *URL* declarations for this Django project; a “table of contents” of your *Django-powered* site. You can read more about URLs in [URL dispatcher](https://docs.djangoproject.com/en/3.1/topics/http/urls/).
+- `mysite/asgi.py`: An entry-point for *ASGI-compatible* web servers to serve your project. See [How to deploy with ASGI](https://docs.djangoproject.com/en/3.1/howto/deployment/asgi/) for more details.
+- `mysite/wsgi.py`: An entry-point for *WSGI-compatible* web servers to serve your project. See [How to deploy with WSGI](https://docs.djangoproject.com/en/3.1/howto/deployment/wsgi/) for more details.
+
+### Run the Project:
+
+By cmd:
+
+```
+python manager.py runserver # 127.0.0.1:8000
+```
+
+<img src="D:\zwh52\Pictures\BlogPhoto\捕获.PNG" alt="捕获" style="zoom:50%;" />
+
+<center>Image1: Start a Django project</center>
+
+You can also customize your port in configuration:
+
+<img src="D:\zwh52\Pictures\BlogPhoto\Confuguration.PNG" alt="Confuguration" style="zoom:60%;" />
+
+<center>Image2: Configure the running port</center>
+
+#### `settings.py`:
+
+In side `setting.py`, there lies configuration of this project.
+
++ Bass directory of the project is shown below:
+
+  ![BassDIR](D:\zwh52\Pictures\BlogPhoto\BassDIR.PNG)
+
++ html templates:
+
+  ![Templates](D:\zwh52\Pictures\BlogPhoto\Templates.PNG)
+
+  Template files are shown in `'DIRS'`.
+
+### Start the First HTTP request:
+
+Inside `url.py`, you can resolve HTTP responses:
+
+```python
+from django.contrib import admin
+from django.shortcuts import HttpResponse,render
+from django.urls import path
+
+
+def index(request):
+    # logic
+
+    # return result
+    # return HttpResponse('index') # Return a String
+    return render(request, 'index.html')  # Return a HTML page
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('index/', index),
+]
+```
+
+After reaching *127.0.0.1:8000/index/*, you can be successfully routed to String index page. Also, you can be routed to a HTML page by  returning `reder(request, 'HTMLpage.html')`.
+
+### Import Static Files
+
+To start this step, let's go to *Bootstrap*, and fetch a simple static *HTML* template, copy and paste in to our project-`./templates/lohin.html`:
+
+
+
+<img src="D:\zwh52\Pictures\BlogPhoto\BootstrapHTML.PNG" style="zoom:60%;" />
+
+<center>HTML page of a "sign in" function</center>
+
+After creating a *HTML* file, we need to add a link connecting to it inside `url.py`. 
+
+```python
+def login(request):
+    return render(request, 'login.html')
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path(r'index/', index),
+    path('login/',login)
+]
+
+```
+
+This time, when we start running *Django* and access http://127.0.0.1:8000/login, we can obtain a page without any static templates:
+
+<img src="D:\zwh52\Pictures\BlogPhoto\LoginPageWithoutStatic.PNG" style="zoom:60%;" />
+
+<center>Login Page Without Static Files</center>
+
+Then, we need to guide into static files. To do this, we need to add a reference to the real path of static files in `settings.py`, and add static files directory.
+
+<img src="D:\zwh52\Pictures\BlogPhoto\Staticfiles.PNG" alt="Staticfiles" style="zoom: 50%;" />
+
+<center>Static Files directory</center>
+
+<img src="D:\zwh52\Pictures\BlogPhoto\StaticFilesSettings.PNG" alt="StaticFilesSettings" style="zoom: 50%;" />
+
+<center>Add Static Files References in settings.py</center>
+
+We then need to found the required static dependencies. After we downloading *Bootstrap* from its official website, we can add the package in to `./static/plugins/bootstrap-3.3.7-dist`.
+
+Then, the required *CSS* file can be found in the resources page, then we can fetch it into out own project structure, and add it into `./static/css.signin.css`
+
+Finally, we can add link in the *HTML* page inside <head> to link the static files:
+
+```html
+<link rel="stylesheet" href="/static/plugins/bootstrap-3.3.7-dist/css/bootstrap.css">
+<link rel="stylesheet" href="/static/css/signin.css">
+```
+
+After all these have done, we can then access the page with static files:
+
+<img src="D:\zwh52\Pictures\BlogPhoto\FinallygetStatic.PNG" alt="FinallygetStatic" style="zoom:60%;" />  
+
+<center>Finally Get Static Styles</center>
