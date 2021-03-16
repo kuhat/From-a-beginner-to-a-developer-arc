@@ -87,11 +87,11 @@ In side `setting.py`, there lies configuration of this project.
 
 + Bass directory of the project is shown below:
 
-  ![BassDIR](D:\zwh52\Pictures\BlogPhoto\BassDIR.PNG)
+  <img src="https://img-blog.csdnimg.cn/20210314174711439.PNG" alt="BassDIR" style="zoom:67%;" />
 
-+ html templates:
++ *HTML* templates:
 
-  ![Templates](D:\zwh52\Pictures\BlogPhoto\Templates.PNG)
+  <img src="https://img-blog.csdnimg.cn/20210314174732886.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="Templates" style="zoom:67%;" />
 
   Template files are shown in `'DIRS'`.
 
@@ -120,7 +120,7 @@ urlpatterns = [
 
 After reaching *127.0.0.1:8000/index/*, you can be successfully routed to String index page. Also, you can be routed to a HTML page by  returning `reder(request, 'HTMLpage.html')`.
 
-### Import Static Files
+### Import Static Files:
 
 To start this step, let's go to *Bootstrap*, and fetch a simple static *HTML* template, copy and paste in to our project-`./templates/lohin.html`:
 
@@ -177,3 +177,277 @@ After all these have done, we can then access the page with static files:
 <img src="https://img-blog.csdnimg.cn/20210314174931945.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="FinallygetStatic" style="zoom:60%;" />  
 
 <center>Finally Get Static Styles</center>
+
+### Realize Sign In:
+
+To  realize signing in, use *form* label `<form></form>`to submit the content to aimed location, inside which:
+
++  `action=""` is the location to be submitted (default the current location), `method=""` is the requesting method (including *get* and *post*, default *get*).
++  `<input></input>` label should indicate `name=""`
++ There should be a `<buttion></button>`. 
+
+Below shows a sample *form* label.
+
+```html
+<form class="form-signin" action="" method="post" novalidate>
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <label for="inputEmail" class="sr-only">Email address</label>
+    <input type="email" id="inputEmail" class="form-control" name="user" placeholder="Email address" required="" autofocus="">
+    <label for="inputPassword" class="sr-only">Password</label>
+    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" value="remember-me"> Remember me
+        </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+</form>
+```
+
+To submit a *form* with *Post* request successfully, there need to annotate a **MIDLEWARE** called `csrf` inside `settins.py`:
+
+```python
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+```
+
+   Then, when pressing the button without entering anything, we can see the request message is a **GET** message. <img src="https://img-blog.csdnimg.cn/2021031611191375.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="GetRequest" style="zoom:50%;" />
+
+<center>Get Request</center>
+
+However, when we input some message and hand in the form, it becomes a **Post** message.
+
+<img src="https://img-blog.csdnimg.cn/20210316111952371.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="Post" style="zoom:50%;" />
+
+<center>Post Request</center>
+
+If we print out the **POST** requests, and the corresponding type, we can find that the input value type is *dict*, thus, we can obtain the value inside the returning message:
+
+```python
+def login(request):
+    print(request, type(request))
+    print(request.method, type(request.method))
+    if request.method == 'GET':
+        return render(request, 'login.html')
+    else:
+        # The logic of dealing with POST request
+        # Obtain the user name and pwd users input
+        print(request.POST, type(request.POST))
+        print(request.POST.get('user')), type(request.POST['user'])
+        print(request.POST['pwd'], type(request.POST['pwd']))
+        user = request.POST.get('user')
+        pwd = request.POST.get('pwd')
+        # To validate the input value via database
+        # If validation successes, inform the success of login
+        # If validation fails, return the login page
+```
+
+```python
+Django version 3.1.7, using settings 'Django.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CTRL-BREAK.March 15, 2021 - 16:34:26
+<WSGIRequest: POST '/login/'> <class 'django.core.handlers.wsgi.WSGIRequest'>
+POST <class 'str'>
+<QueryDict: {'user': ['alex'], 'pwd': ['123']}> <class 'django.http.request.QueryDict'>
+alex
+123 <class 'str'>
+```
+
+After accomplish the logic of dealing with the login process, the logic of code is shown below:
+
+```python
+def login(request):
+    if request.method == 'POST':
+        # The logic of dealing with POST request
+        # Obtain the user name and pwd users input
+        user = request.POST.get('user')
+        pwd = request.POST.get('pwd')
+        # To validate the input value via database
+        if user == 'alex' and pwd == '123':
+            # If validation successes, inform the success of login
+            return HttpResponse('Login Success!!!')
+    # Else return the original page
+    return render(request, 'login.html')
+```
+
+If we get the right password and username, the browser will take us to a new page showing "Login Success!!!", if we get the wrong user name or password, or just send a **GET** request, the page will stay unchanged.
+
+<img src="https://img-blog.csdnimg.cn/20210316112054466.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="LoginSuccess" style="zoom:60%;" />
+
+<center>Login Success</center>
+
++ Differences between **POST** and **GET** request:
+
+  If using **GET** request, the request message will appear on the *url* (*?user=alex&pwd=123*),
+
+  and to fetch the value, use `requst.GET` rather than `request.POST`. 
+
+  If using **POST** request, the data will be submitted on form without appearance. 
+
+  <img src="https://img-blog.csdnimg.cn/20210316112134626.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="GETRequestURL" style="zoom:50%;" />
+
+<center>GET Request</center>
+
+### Redirect:
+
+Instead of using `render()`, We can use `redirect()` to redirect to another page if user succeeds in logging in.
+
+```python
+def login(request):
+    if request.method == 'POST':
+        # The logic of dealing with POST request
+        # Obtain the user name and pwd users input
+        user = request.POST.get('user')
+        pwd = request.POST.get('pwd')
+        # To validate the input value via database
+        if user == 'alex' and pwd == '123':
+            # If validation successes, inform the success of login
+            return redirect('/index/')
+    # Else return the original page
+    return render(request, 'login.html')
+
+```
+
+### Start an App:
+
+1. By *CMD*: `python manage.py startapp appName` .
+
+2. By running `manage.py` by task:
+
+   tools -> run `manage.py` by task -> appear an window -> type in command.
+
+   
+
+<img src="https://img-blog.csdnimg.cn/20210316112201190.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" style="zoom:50%;" />
+
+<center>Create an App</center>
+
+3. To register an App, go to `settings.py` to add one app configuration:
+
+   ```python
+   INSTALLED_APPS = [
+       'django.contrib.admin',
+       'django.contrib.auth',
+       'django.contrib.contenttypes',
+       'django.contrib.sessions',
+       'django.contrib.messages',
+       'django.contrib.staticfiles',
+       'app01.apps.App01Config'  # add new app
+   ]
+   ```
+
+4. To rearrange URL routing functions, we need to transfer the functions in `urls.py` to `./app01/views.py`, then import these functions to `url.py`.
+
+   ```python
+   from django.contrib import admin
+   from django.shortcuts import HttpResponse, render, redirect
+   from django.urls import path
+   
+   from app01 import views
+   
+   urlpatterns = [
+       path('admin/', admin.site.urls),
+       path(r'index/', views.index),
+       path('login/', views.login)
+   ]
+   ```
+
+### Object Relation Mapping (*ORM*):
+
+ORM majorly figures out the mapping between an object and an database table, every instance corresponds to one entity in an table, and the parameters in one object correspond to the column in the table.
+
+```
+ORM                           DB
+class --------------------->>>Table
+Object -------------------->>>Row
+Attribute ----------------->>>Field
+```
+
+*ORM* provides the mapping of object to database, so that writing *SQL* statements is not necessary, only by manipulate objects can ones set database.
+
+1. Configurate Database connection in `settings.py`:
+
+   ```python
+   DATABASES = {
+       'default': {
+           'ENGINE': 'django.db.backends.sqlite3',
+           'NAME': BASE_DIR / 'db.sqlite3',
+       }
+   }
+   ```
+
+2. Write one class under `./app01/models.py`:
+
+```python
+from django.db import models
+
+
+# Create your models here.
+class User(models.Model):
+    username = models.CharField(max_length=32)    # Varchar(32)
+    password = models.CharField(max_length=32)
+```
+
+3. Execute database migration:
+
+   ```
+   python manage.py makemigrations  # Scan the #changes under all the models.py, and make the #changes into migration files
+   python manage.py migrate
+   ```
+
+   <img src="https://img-blog.csdnimg.cn/20210316112257560.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="migrat" style="zoom:60%;" />
+
+<center>ORM and Database</center>
+
+4. Test *ORM*:
+
+   We can write printing function in Index request:
+
+   ```python
+   def index(request):
+       # logic
+       # Test ORM
+       from app01 import models
+       res = models.User.objects.all()
+       for i in res:
+           print(i, i.username, i.password, type(i.username))
+       print(res, type(res))
+       return render(request, 'index.html')  # Return a HTML page
+   ```
+
+   Then, the out put will be the entities added in the database:
+
+   ```python
+   User object (1) Danny 123 <class 'str'>
+   User object (2) Alex 456 <class 'str'>
+   <QuerySet [<User: User object (1)>, <User: User object (2)>]> <class 'django.db.models.query.QuerySet'>
+   
+   ```
+
+5. Check database when logging in:
+
+   We can add one configuration when consulting the database, if the user and password can be found in the database, return `./index.html`, if there is not any match, stay in `./login.html`.
+
+   ```python
+   def login(request):
+       if request.method == 'POST':
+           # The logic of dealing with POST request
+           # Obtain the user name and pwd users input
+           user = request.POST.get('user')
+           pwd = request.POST.get('pwd')
+           # To validate the input value via database
+           # if user == 'alex' and pwd == '123':
+           if models.User.objects.filter(username=user, password=pwd):
+               # If validation successes, inform the success of login
+               return redirect('/index/')
+       # Else return the original page
+       return render(request, 'login.html')
+   ```
+
