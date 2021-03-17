@@ -1,10 +1,12 @@
 ---
 layout: post
-title:  "Quick Guidance of Django"
-description: These are the notes I arranged by reading the official documents. Hope you’ll find something useful! 
-date: 2021-02-25 13:32:20 +0300
-categories: Python Django
+title: "Quick Guidance of Django"
+date: 2021-2-25 13:32:20 +0300
+description: These are the notes I arranged by reading the official documents. Hope you’ll find something useful! # Add post description (optional)
+img:  # Add image post (optional)
+
 ---
+
 This is a quik guidance to create an app with Django and python.
 
 
@@ -533,35 +535,34 @@ After running the project, the output is shown below:
 To transfer data from database to template, there is a pattern in template grammar. First, we need to add one parameter in routing function:
 
 ```python
-def publisher_list(request):
-    # Logic
+def publisher_list(request):   
+    # Logic   
     # Obtain all the information of Publishers
     # Return a page which contains the information
-    all_publishers = models.Publisher.objects.all()  # Objests list 
-    return render(request, 'publisher_list.html', {'all_Publishers': all_publishers})
+    all_publishers = models.Publisher.objects.all()  # Objests list
+    return render(request, 'publisher_list.html',{'all_Publishers': all_publishers})
 ```
 
-Then, we need to add parameter transfer function in our template. In out table body, `{{ variable_name }}` is used to pass in corresponding parameter in routing function, and `{% to_apply_tags_inside %}`:
+Then, we need to add parameter transfer function in our template. In out table body,  `{{ variable_name }}` is used to pass in corresponding parameter in routing function, and `{ % to_apply_tags_inside % }`:
 
-```python
+```
 variables:
 {{variable_name}}
 for:
-    {{% for i in variable_name %}}
+    { { % for i in variable_name % } }
         {{forloop.couter}}
         {{i.attribute}}
-    {{% endfor %}}
+    { { % endfor % } }
 
 if:
-    {{% if condition %}}
+    { { % if condition % } }
         statement
-    {{% elseif condition1 %}}
+    { { % elseif condition1 % } }
         statement1
-    {{% else %}}
+    { { % else % } }
         statement2
-    {{% endif %}}
-```
-
+    { { % endif % } }
+```    
 After adding template grammar, the `publisher_list.html` looks like:
 
 ```html
@@ -732,6 +733,9 @@ publisher_edit.html:
 </form>
 </body>
 ```
+
+
+
 After that, user can manipulate the data in the corresponding row. After submission, and the name of the changed value is not empty or duplicated, the chosen object's name will be updated and confirmed. Then it will redirect user to the original page.
 
 ```python
@@ -776,4 +780,7 @@ The manipulation steps are shown below:
 <center>Manipulate Row 3</center>
 
 <img src="https://img-blog.csdnimg.cn/20210317204932946.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="edit3" style="zoom: 60%;" />
+
 <center>Updated Value</center>
+
+==To be countinued==
