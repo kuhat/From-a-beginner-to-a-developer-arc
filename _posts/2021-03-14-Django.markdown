@@ -1,9 +1,9 @@
 ---
 layout: post
-title: "Quick Guidance of Django"
-date: 2021-2-25 13:32:20 +0300
-description: These are the notes I arranged by reading the official documents. Hope you’ll find something useful! # Add post description (optional)
-img:  # Add image post (optional)
+title:  "Quick Guidance of Django"
+description:These are the notes I arranged by reading the official documents. Hope you’ll find something useful! # Add post description (optional)
+date:   2021-02-25 13:32:20 +0300
+categories: Python Django
 ---
 This is a quik guidance to create an app with Django and python.
 
@@ -184,7 +184,7 @@ To  realize signing in, use *form* label `<form></form>`to submit the content to
 
 +  `action=""` is the location to be submitted (default the current location), `method=""` is the requesting method (including *get* and *post*, default *get*).
 +  `<input></input>` label should indicate `name=""`
-+ There should be a `<buttion></button>`. 
++  There should be a `<buttion></button>`. 
 
 Below shows a sample *form* label.
 
@@ -451,3 +451,329 @@ class User(models.Model):
        return render(request, 'login.html')
    ```
 
+## CURD （***Create*** ***Update*** ***Read*** ***Delete***）
+
+In this session, we are going to set up a book publishing control system which is able to  create, read, update, delete data in *mysql* database.
+
+### Set Up Environment:
+
+First, we need to create and connect to a database which contains Primary Key (id) and name of  each publisher, and add a *Publisher* object in `medels.py`.  Then as shown in the previous session, we are required to make database migration through calling `python manage.py makemigrations` and `python manage.py migrate`. After finishing all these, the output is shown below:
+
+ <img src="https://img-blog.csdnimg.cn/20210317205131888.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="publisherDatabase" style="zoom:60%;" />
+
+<center>Database Migration of Publisher </center>
+
+ Following that, we can write new routing relation in `urls.py`, and write new routing function in `./app01/views.py`, also, do not forget to create a *HTML* page containing  a data representation (a simple table).
+
+Routing function in `./app01/views.py` which print out all the objects added in the database:
+
+```python
+def publisher_list(request):
+    # Logic
+    # Obtain all the information of Publishers
+    # Return a page which contains the information
+    all_publishers = models.Publisher.objects.all()
+    for i in all_publishers:
+        print(i)
+        print(i.id)
+        print(i.name)
+    return render(request, 'publisher_list.html')
+```
+
+Added *url* pattern in `url.py`:
+
+```python
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path(r'index/', views.index),
+    path('login/', views.login),
+    url(r'publisher_list/', views.publisher_list)
+]
+```
+
+A simple testing page with a table is created in `./templates/publisher.html`
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Publishers</title>
+</head>
+<body>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Sequence Number</th>
+        <th>ID</th>
+        <th>Publisher Name</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>1</td>
+        <td>1</td>
+        <td>Publisher</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
+```
+
+After running the project, the output is shown below:
+
+<img src="https://img-blog.csdnimg.cn/20210317205057999.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="ResultsofTestingDatabase" style="zoom:60%;" />
+
+<center>Results of Testing</center>
+
+### Template Grammar:
+
+To transfer data from database to template, there is a pattern in template grammar. First, we need to add one parameter in routing function:
+
+```python
+def publisher_list(request):
+    # Logic
+    # Obtain all the information of Publishers
+    # Return a page which contains the information
+    all_publishers = models.Publisher.objects.all()  # Objests list 
+    return render(request, 'publisher_list.html', {'all_Publishers': all_publishers})
+```
+
+Then, we need to add parameter transfer function in our template. In out table body, `{{ variable_name }}` is used to pass in corresponding parameter in routing function, and `{% to_apply_tags_inside %}`:
+
+```python
+variables:
+{{variable_name}}
+for:
+    {{% for i in variable_name %}}
+        {{forloop.couter}}
+        {{i.attribute}}
+    {{% endfor %}}
+
+if:
+    {{% if condition %}}
+        statement
+    {{% elseif condition1 %}}
+        statement1
+    {{% else %}}
+        statement2
+    {{% endif %}}
+```
+
+After adding template grammar, the `publisher_list.html` looks like:
+
+```html
+<table border="1">
+    <thead>
+    <tr>
+        <th>Sequence Number</th>
+        <th>ID</th>
+        <th>Publisher Name</th>
+    </tr>
+    </thead>
+    <tbody>
+        {% for i in all_Publishers %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ i.id }}</td>
+                <td>{{ i.name }}</td>
+            </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+```
+
+After we mapping the variables on the page, the results looks like:
+
+<img src="https://img-blog.csdnimg.cn/20210317204717878.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="PublisherOutput" style="zoom:60%;" />
+
+<center>Publisher Output</center>
+
+### Create:
+
+First, when customer send a **Get** request get to a page, the page returns returns a **Form** which can be used to intake information, then after customer clicking a button to submit, the page can submit a **Post** request, and the server can insert the data into database, finally, the server returns a **Redirect** page, and the page can show all the refreshed data to the user.
+
+1. Add a new *HTML* page containing a **Form** and a new *url* pattern in `urls.py`. 
+
+   `publisher_add.html` is shown below:
+
+   ```html
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <title>Publisher_add</title>
+   </head>
+   <body>
+   <form action="" method="post">
+       Publisher_Name: <input type="text" name="pub_name">
+       <button>
+           Submit
+       </button>
+   </form>
+   </body>
+   </html>
+   ```
+
+   *Url* patterns inside `urls.py`:
+
+   ```python
+   urlpatterns = [
+       path('admin/', admin.site.urls),
+       path(r'index/', views.index),
+       path('login/', views.login),
+       url(r'publisher_list/', views.publisher_list),
+       url(r'publisher_add', views.publisher_add)
+   ]
+   ```
+
+2. Write a routing function in `./app01/views.py` to resolve the **GET** request and the **POST** request:
+
+   ```python
+   # Add new publishers
+   def publisher_add(request):
+       if request.method == 'POST':
+           # Post request
+           # Obtain the data user input
+           pub_name = request.POST.get('pub_name')
+           # print(pub_name)
+           # Add the data into database
+           res = models.Publisher.objects.create(name=pub_name)
+           # print(res, type(res))
+           # return a new page containing new data
+           return redirect('/publisher_list/')
+       # Get request returns a page containing Form
+       return render(request, 'publisher_add.html')
+   ```
+
+3. After we testing the function, the submit page and the returning page with is shown below:
+
+   <img src="https://img-blog.csdnimg.cn/20210317204754440.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="PublisherAdd1" style="zoom:60%;" />
+
+    <center>Submit Page </center>
+
+
+    <img src="https://img-blog.csdnimg.cn/20210317204817735.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="PublisherAdd2" style="zoom:60%;" />
+    
+    <center>Returning Page With Added Data</center>
+
+### Delete:
+
+We can add a routing function in `./app01/views.py` called `publisher_del()`, and we need to add corresponding *url* pattern in `url.py`. To show the deletion operation on front page, we need also to add a button option to delete the item with send back an request:
+
+In the table body, add the following line:
+
+```html
+<tbody>
+    {% for i in all_Publishers %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.id }}</td>
+            <td>{{ i.name }}</td>
+            <td><a href="/publisher_del/?pk={{ i.id }}">Delete</a> </td>
+        </tr>
+    {% endfor %}
+
+</tbody>
+```
+
+The routing function which contains database query is shown below, it firstly obtain the object whose id equal to the number of row which user is intend to delete, and then delete it from the database. And finally redirect to the updated page.
+
+```python
+def publisher_del(request):
+    # Obtain the id of the object
+    pk = request.GET.get('pk')
+    # print(pk)
+    # Delete the id from database
+    models.Publisher.objects.get(pk=pk).delete()
+    # Redirect to the original page
+    return redirect('/publisher_list/')
+```
+
+### Update:
+
+The update page is almost the same as the delete page, only the logic is different. To update a value, firstly, the button on the `publisher_list` which provide the function will rout user to the edit page, where back-end gets the Primary key of which user choose to edit and transfer the *PK* to routing function `publisher_edit()`. 
+
+```html
+<tbody>
+    {% for i in all_Publishers %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ i.id }}</td>
+            <td>{{ i.name }}</td>
+            <td>
+                <a href="/publisher_del/?pk={{ i.id }}">Delete</a>
+                <a href="/publisher_edit/?pk={{ i.id }}">Edit</a>  {# Value of pk equals to object's id #}
+            </td>
+        </tr>
+    {% endfor %}
+
+</tbody>
+```
+
+publisher_edit.html:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Publisher_edit</title>
+</head>
+<body>
+<form action="" method="post">
+    Publisher_Name: <input type="text" name="pub_name" value="{{ pub_obj.name }}"> <span>{{ error }}</span>
+    <button>
+        Submit
+    </button>
+</form>
+</body>
+```
+After that, user can manipulate the data in the corresponding row. After submission, and the name of the changed value is not empty or duplicated, the chosen object's name will be updated and confirmed. Then it will redirect user to the original page.
+
+```python
+# Edit Publishers
+def publisher_edit(request):
+    pk = request.GET.get('pk')
+    pub_obj = models.Publisher.objects.get(pk=pk)
+
+    # Get Request: return a page containing Form, and input the original data
+    if request.method == 'GET':
+        return render(request, 'publisher_edit.html', {'pub_obj': pub_obj})
+
+    # Post Request:
+    else:
+        # Get the name of publisher user submitted
+        pub_name = request.POST.get('pub_name')
+
+        # If there are duplicated names already in database
+        if models.Publisher.objects.filter(name=pub_name):
+            return render(request, 'publisher_edit.html', {'error': 'Name already exits!'})
+
+        # If the name is empty
+        if not pub_name:
+            return render(request, 'publisher_edit.html', {'error': 'Name cannot be empty!'})
+
+        # Manipulate the data in database
+        pub_obj.name = pub_name
+        # Submit the change
+        pub_obj.save()
+        # Redirect to the original page in Publisher_list
+        return redirect('/publisher_list')
+```
+
+The manipulation steps are shown below:
+
+<img src="https://img-blog.csdnimg.cn/20210317204905846.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="edit.1PNG" style="zoom:60%;" />
+
+<center>Original Page</center>
+
+<img src="https://img-blog.csdnimg.cn/2021031720492053.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="edit2" style="zoom:60%;" />
+
+<center>Manipulate Row 3</center>
+
+<img src="https://img-blog.csdnimg.cn/20210317204932946.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="edit3" style="zoom: 60%;" />
+<center>Updated Value</center>
