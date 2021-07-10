@@ -6,7 +6,7 @@ description: This is a report for simulating routing algorithm-"Bellman-ford" us
 ---
 This is a report for simulating routing algorithm -"Bellman-ford" using python socket programming.
 
-# 1. Abstract
+## 1. Abstract
 
 The main function of network layer is to send packets from source machine to destination machine locating anywhere in the internet.  The mechanism behind the function includes routing in routers: routers must decide the next neighbor to drop these packets, which contains path computing. And the routing algorithms is the key to implement the function. In this project, one of the routing algorithms, Bellman-ford, is simulated by python socket programming. Each `.json` file represents one router in the network and their distances to each other are maintained by objects in each file. After computing the distance vector, the shortest paths to each other will converge to optimized values which are written in the output `.json` file. In this report, method to implement Bell-man Ford algorithm via python socket programming is introduced, and testing method along with expected results are demonstrated.
 

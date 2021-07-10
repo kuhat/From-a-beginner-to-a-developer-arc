@@ -7,7 +7,7 @@ description: This is a report for file synchronization using python socket progr
 
 This is a report for file synchronization using python socket programming.
 
-# 1. Abstract
+## 1. Abstract
 
 File synchronization is widely applied in applications with the function of providing file downloading and file uploading. Softwares such as Dropbox, Baidu Netdisk, Ali Cloud, have the rudimentary function of file synchronization with breakpoint resume, partially update along with encryption methods to ensure security. To provide file synchronization between devices, network programming enables the interaction between different computers, which mainly containing file transferring protocols. This report will demonstrate the process of implementing a file synchronization application including several transferring protocols between three hosts using python network programming along with the testing methods and results. Also, further improvement plan with be introduced.
 

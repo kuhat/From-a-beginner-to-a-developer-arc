@@ -6,7 +6,7 @@ description: This is a report for 3D modeling project using freeglut. # Add post
 ---
 This is a report for 3D modeling project using freeglut.
 
-# 1. Introduction
+## 1. Introduction
 This is a 3D scene describing Central building (CB) and Science buildings (SBs) in north campus of Xi’an
 Jiaotong-Liverpool University (XJTLU) in real life. This scene contains techniques such as lighting, fog, texture 
 mapping and viewing transformation, moving animation. There are ten objects in this scene in total, which 
