@@ -449,7 +449,7 @@ ReactDOM.render(<Hello_com />, document.getElementById('hello_com') )
 
   However, when running the program, there is an Error:
 
-  <img src="D:\pc\Pictures\JSXError1.PNG" alt="JSXError1" style="zoom:60%;" />
+  <img src="https://img-blog.csdnimg.cn/20210713155352405.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="JSXError1" style="zoom:60%;" />
 
 <center>Error when calling onIncrement()</center>
 
@@ -618,7 +618,7 @@ This is because originally we are using abbreviated function calling method:
 
    
 
-<img src="D:\pc\Pictures\formHTML.PNG" alt="formHTML" style="zoom:60%;" />![formHandle](D:\pc\Pictures\formHandle.PNG)
+<img src="https://img-blog.csdnimg.cn/20210713155517804.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="formHTML" style="zoom:60%;" />![formHandle](D:\pc\Pictures\formHandle.PNG)
 
 To integrate the event handler into one method:
 
