@@ -5,7 +5,680 @@ description: An introduction of what docker is & the basic commonds.
 date:   2021-06-08 21:03:36 +0530
 categories: React javaScript
 ---
-This post demonstrates the concepts of container and `Docker`. The basic operations of `Docker` will also be inspected.
+This post demonstrates the concepts of `React`and its general use. The basic operations of `React` will be demonstrated.
 
-## Overview
+# Overview
 
+## Introducing to `JSX`
+
+Consider this variable declaration:
+
+```jsx
+const element = <h1>Hello, world!</h1>;
+```
+
+This funny tag syntax is neither a string nor HTML.
+
+It is called ``JSX``, and it is a syntax extension to JavaScript. We  recommend using it with React to describe what the UI should look like. `` JSX`` may remind you of a template language, but it comes with the full  power of *JavaScript*.
+
+`JSX` produces React “*elements*”. We will explore rendering them to the **DOM** in the [next section](https://reactjs.org/docs/rendering-elements.html). Below, you can find the basics of `JSX` necessary to get you started.
+
+### Why JSX
+
+**React** embraces the fact that rendering logic is inherently coupled  with other UI logic: how events are handled, how the state changes over  time, and how the data is prepared for display.
+
+Instead of artificially separating *technologies* by putting markup and logic in separate files, React [separates *concerns*](https://en.wikipedia.org/wiki/Separation_of_concerns) with loosely coupled units called “components” that contain both. We will come back to components in a [further section](https://reactjs.org/docs/components-and-props.html), but if you’re not yet comfortable putting markup in `JS`, [this talk](https://www.youtube.com/watch?v=x7cQ3mrcKaY) might convince you otherwise.
+
+React [doesn’t require](https://reactjs.org/docs/react-without-jsx.html) using `JSX`, but most people find it helpful as a visual aid when working with UI inside the JavaScript code. It also allows React to show more  useful error and warning messages.
+
++ In the example below, we declare a variable called `name` and then use it inside `JSX` by wrapping it in curly braces:
+
+  ```jsx
+  const element = <h1>Hello, {name}</h1>;
+  ReactDOM.render(
+    element,
+    document.getElementById('root')
+  );
+  ```
+
+​		You can put any valid [JavaScript expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#Expressions) inside the curly braces in `JSX`. For example, `2 + 2`, `user.firstName`, or `formatName(user)` are all valid JavaScript expressions.
+
++ In the example below, we embed the result of calling a JavaScript function, `formatName(user)`, into an `<h1>` element。
+
+  ```jsx
+  function formatName(user) {
+    return user.firstName + ' ' + user.lastName;
+  }
+  
+  const user = {
+    firstName: 'Harper',
+    lastName: 'Perez'
+  };
+  
+  const element = (
+    <h1>
+      Hello, {formatName(user)}!  
+    </h1>
+  );
+  
+  ReactDOM.render(
+    element,
+    document.getElementById('root')
+  );
+  ```
+
+## *JSX* is an Expression Too 
+
+After compilation, `JSX` expressions become regular JavaScript function calls and evaluate to JavaScript objects.
+
+This means that you can use *JSX* inside of `if` statements and `for` loops, assign it to variables, accept it as arguments, and return it from functions:
+
+```jsx
+function getGreeting(user) {
+  if (user) {
+    return <h1>Hello, {formatName(user)}!</h1>;  }
+  return <h1>Hello, Stranger.</h1>;}
+```
+
+### Specifying Attributes with *JSX*
+
+You may use quotes to specify string literals as attributes:
+
+```jsx
+const element = <div tabIndex="0"></div>;
+```
+
+You may also use curly braces to embed a JavaScript expression in an attribute:
+
+```jsx
+const element = <img src={user.avatarUrl}></img>;
+```
+
+### Specifying Children with *JSX*
+
+If a tag is empty, you may close it immediately with `/>`, like XML:
+
+```jsx
+const element = <img src={user.avatarUrl} />;
+```
+
+*JSX* tags may contain children:
+
+```jsx
+const element = (
+  <div>
+    <h1>Hello!</h1>
+    <h2>Good to see you here.</h2>
+  </div>
+);
+```
+
+### Conditional rendering:
+
+#### if-else conditional rendering:
+
+```jSX
+const loadData = () =>{
+    if (isLoading) {
+        return<div>loading...</div>
+    }
+    return <div>Loading finished, here is the place to display data.</div>
+}
+```
+
+#### ternary operator conditional rendering:
+
+```jSX
+const loadData = () =>{
+	return isLoading ? (<div>loading...</div>) : (<div>Loading finished, here is the place to display data.</div>)
+}
+```
+
+#### && conditional rendering
+
+```jsx
+const loadData = () =>{
+    return isLoading && (<div>loading...</div>)
+}
+```
+
+### List Rendering
+
+- Use `map()` method to render a list of data
+- cautious: add key entity when rendering a list, and the value of key should be unique      
+- avoid use index as key
+
+```jsx
+const songs = [
+    {id: 1, name: 'My love'},
+    {id: 2, name: "Transpassing"},
+    {id: 3, name: 'Uptown Funk'},
+]
+```
+
+To render this list in the page, use `<ul>{songs.map(item => <li key={item.id}>item.name</li>)}</ul>` in the `JSX`.
+
+### Style bound 
+
+To bound style with `CSS`, we should first create a class name in the corresponding tag. Then, we can import the targeted `CSS` file. For example, we can create `index.css`, then, write:
+
+
+```css
+.list{
+test-aligh: center
+}
+```
+
+In `index.js`, we can add parameters in our <ul> tag. `<ul classname='list' style={ {color: 'red', backgroundColor: 'skyblue'}}>{songs.map(item => <li key={item.id}>item.name</li>)}</ul>`
+
+### After the three examples, the generated code should look like:
+
+```jsx
+// Use JSX to transfer JS variables into the JSX
+const name = "Danny"
+const age = 19
+const isLoading = true
+
+// ternary operator conditional rendering:
+const loadData = () =>{
+    return isLoading ? (<div>loading...</div>) : (<div>Loading finished, here is the place to display data.</div>)
+}
+
+// List rendering:
+const songs = [
+    {id: 1, name: 'My love'},
+    {id: 2, name: "Transpassing"},
+    {id: 3, name: 'Uptown Funk'},
+]
+
+const title1 = (
+    <div className="title">
+        Hello JSX, {name}, age: {age}
+        <h1>
+            Conditional rendering:
+            {loadData()}
+        </h1>
+        <ul className="list" style={ {color: 'red', backgroundColor: 'skyblue'} }>
+            {songs.map(item => <li key={item.id}>{item.name}</li>)}
+        </ul>
+    </div>
+
+)
+
+// render react element
+ReactDOM.render(title1, document.getElementById('root'))
+```
+
+ Then when running `npm start`, the page rendering in the browser looks like:<img src="D:\pc\Pictures\react1JSX.PNG" alt="react1JSX" style="zoom:60%;" />
+
+## React component Creation
+
+#### use function to creation component
+
++ The component using ***JS*** function is called: function component
++ Function components must have returning value
++ The first letter of the component name must be upper-case, **React** uses this to distinguish the differences between component and a normal React element.   
+
+For example:
+
+```jsx
+funcfunction Hello() {
+    return(
+        <div>This is the first function component</div>
+    )
+}
+
+```
+
+Or you can simplify the syntax:
+
+```jsx
+const Hello = () => <div>This is the first component</div>
+```
+
+#### use class to create a React component
+
++ **Class component**: the component used by ES6
++ First letter of a class name must be upper case
++  Class component should inherit `React.Component` super class to get the method provided by ***super()***.
++ Class component must provide `render()` method
++ `render()` must have returning value
+
+```jsx
+class HelloClass extends React.Component {
+    render() {
+        return (
+            <div>This is the first class component</div>
+        )
+    }
+}
+```
+
+In the **index.htm**l, we can add a tag `<div id='hello'></div>`, then we can add:
+
+```jsx
+ReactDOM.render(<HelloClass />, document.getElementById('hello'))
+```
+
+### Write a independent `JS` file to include class component
+
++ Create `Hello.js`
++ Import *React* in to `Hello.js`
++ Write component or class
++ Export this component
++ Import this component in `index.js`
++ Render this component
+
+In the new `Hello.js`:
+
+```jsx
+import React from 'react'
+
+// make a new component
+class Hello_com extends React.Component{
+    render() {
+        return <div>This is the first imported component</div>
+    }
+}
+
+// export component
+export default Hello_com
+```
+
+Then, we need to import this file into `index.js` and render it directly.
+
+```jsx
+// import Hello component
+import Hello_com from "./Hello";
+
+ReactDOM.render(<Hello_com />, document.getElementById('hello_com') )
+```
+
+### React Event handling
+
+#### Event binding:
+
+1. Syntax: ***on + event name = {event handling process}***, such as `onClick={()=>{}}`
+2. Cautious: *React* event handling uses  *Hump nomenclature*, such as: onMouseEnter, onFocus......
+
++ Event binding as a class:
+
+  ```jsx
+  // event handling
+  class eventHandle extends React.Component {
+      handleClick(){
+          console.log("Clicking.... ")
+      }
+      // Envent handler
+      render() {
+          return (
+              <button onClick={this.handleClick}>Hit me!!</button>
+          )
+      }
+  }
+  ```
+
++ Event binding as a function:
+
+  ```jsx
+  function event_handle(){
+      function handleClick(){
+          console.log("Clicking.... ")
+      }
+      return(
+          <button onClick={handleClick}>Hit me!!</button>
+      )
+  }
+  ```
+
+#### Event Object
+
+1. We can get event object through the parameter of the event handling function
+
+2. Event objects in *React* are called **Synthetic event (object) **
+
+3. Synthetic events: They are compatible with all the browsers, there is no need to worry about the problem of cross-browser problem.
+
+   Assume we have a function to prevent the default behavior of the browser:
+
+   ```jsx
+   function handleClick(e){
+       // prevent the default behavior of the browser
+       e.preventDefault()
+       console.log("Clicking.... ")
+   }
+   ```
+
+   if we click on the button which calls this function:
+
+   ```jsx
+    <a href="https://www.baidu.com" onClick={handleClick}>
+               Click this to not jump to baidu
+           </a>
+   ```
+
+   Then, it will not jump to baidu.
+
+### Stateful component && Stateless component
+
++ *Function component* is called **Stateless component**, while *class component* is called **Stateful component**
++ **State** is relevant to **data**
++ *Function component* has no state, only responsible to show **Static data**
++ *Class component* has its own state, responsible for refreshing UI, which let the data flow
+
+#### *State* && *setState* in component
+
+##### Usage of *state* :
+
++ **state** is relevant to **data**
+
++ **state** is private, only accessible in the inner structure of component
+
++ Use `this.state` to get its value
+
+  ```jsx
+  class Hello_com extends React.Component{
+      state = {
+          count:0
+      }
+      render() {
+          return <div>This is the first stateful imported component, {this.state.count}</div>
+      }
+  }
+  ```
+
+##### *setState()* to change state
+
++ *state* can be changed
+
++ Syntax: this.setState({value to be changed})
+
++ Cautious: Do not try to change the value in *state*, which is prohibited
+
++ effect of `setState()`:  1. Change *State* 2. **Refresh UI**
+
++ It is a reflection of data driven view
+
+   ```jsx
+   class Hello_com extends React.Component {
+       state = {
+           count: 0,
+           test: "this will not change"
+       }
+   
+       render() {
+           return (
+               <div>
+                   <h1><a>
+                       This is the first stateful imported component
+                   </a>
+                       couter: {this.state.count}
+                       <h2>
+                           test: {this.state.test}
+                       </h2>
+                   </h1>
+                   <button onClick={() => {
+                       this.setState({
+                           count: this.state.count + 1
+                       })
+                   }}>+1
+                   </button>
+               </div>
+           )
+       }
+   }
+   ```
+
+##### Detach the event handling function out from the *JSX* structure
+
++ We can write a independent function `onIncrement()` in the class
+
+  ```jsx
+  onIncrement(){
+          this.setState({
+              count: this.state.count + 1
+          })
+      }
+  ```
+
+  Then, the button in the *JSX* structure becomes:
+
+  ```jsx
+  <button onClick={this.onIncrement}>+1</button>
+  ```
+
+  However, when running the program, there is an Error:
+
+  <img src="D:\pc\Pictures\JSXError1.PNG" alt="JSXError1" style="zoom:60%;" />
+
+<center>Error when calling onIncrement()</center>
+
+This is because originally we are using abbreviated function calling method:
+
+` <button onClick={() => {this.setState({count: this.state.count + 1})}}>+1` in the event handling method, and `()=>{}` this kind of method calling does not contain *this* inside, thus, the *this* of this abbreviated calling method will find its parent method `render()`, and this super class has a `setState()` method. However, when we detach the method to outside, the value of `this` changes. 
+
+##### Solutions
+
+1. Arrow function:
+
+   Arrow function doesn't contain this.
+
+   ```jsx
+   <button onClick={() => this.onIncrement()}>+1</button>
+   ```
+
+2. *Function.prototype.bind()*:
+
+   ```jsx
+   constructor() {
+           super();
+           this.state = {
+               count: 0,
+               test: "this will not change"
+           }
+           this.onIncrement = this.onIncrement.bind(this)
+       }
+   ```
+
+   Then, in the *JSX* below, we can use:
+
+   ```jsx
+   <button onClick={this.onIncrement}>+1</button>
+   ```
+
+3. Use arrow function as class instantiated method:
+
+   ```jsx
+   onIncrement=() => {
+           console.log("clicking....")
+           this.setState({
+               count: this.state.count + 1
+           })
+       }
+   ```
+
+### Form Processing
+
+#### Controlled component
+
++ Form element in HTML is importable, which is said to have its own state.
++ However, the changeable *State* value usually stores in *state* variable, and it can only be modified through `setState()` method.
++ *React* binds *State* with from element value, and it can control form value through *State* value.
++ **Controlled component**: The form element whose value is controlled by *React*.
+
+##### Steps:
+
+1. Add a *State* to represent the value of the form element. (In charge of the source of the form element)
+
+   ```jsx
+    state = {
+           txt: 'aaaaaaaaa'
+       }
+   
+   ```
+
+2. Bind the element with **Change event**, and set the value of the form element to be the value of *State*. (In charge of the change of the element value)
+
+   ```jsx
+   <input type="text" value={this.state.txt} onChange={this.handleChange} />
+   ```
+
+   Event handler:
+
+   ```jsx
+   handleChange = e =>{
+           this.setState(
+               {
+                   txt: e.target.value
+               }
+           )
+       }
+   ```
+
+   For text, text area, pull down menu, we can operate through `e.target.value`, for check box, we can operate on `e.target.checked`. Below is an example of operations on controlled elements:
+
+   ```jsx
+   import React from 'react'
+   
+   // Form processing
+   
+   class Form_process extends React.Component {
+       state = {
+           txt: 'aaaaaaaaa',
+           content: '',
+           city: 'bj',
+           isChecked: false
+       }
+   
+       // Handle change in the text input
+       handleChange = e => {
+           this.setState(
+               {
+                   txt: e.target.value
+               }
+           )
+       }
+   
+       // Handle change in the text area
+       handleContent = e => {
+           this.setState(
+               {
+                   content: e.target.value
+               }
+           )
+       }
+   
+       // Handle pull down menu
+       handleCity = e => {
+           this.setState(
+               {
+                   city: e.target.value
+               }
+           )
+       }
+   
+       // Handle the change in check box
+       handleChecked = e =>{
+           this.setState(
+               {
+                   isChecked: e.target.checked
+               }
+           )
+       }
+   
+       render() {
+           return (
+               <div>
+                   {/*{ text }*/}
+                   <input type="text" value={this.state.txt} onChange={this.handleChange}/>
+                   <br/>
+   
+                   {/* text area */}
+                   <textarea value={this.state.content} onChange={this.handleContent}/>
+                   <br/>
+   
+                   {/*  pull down menu  */}
+                   <select value={this.state.city} onChange={this.handleCity}>
+                       <option value="sh">Shanghai</option>
+                       <option value="bj">Beijing</option>
+                       <option value="gz">Guangzhou</option>
+                   </select>
+   
+                   {/*  check box  */}
+                   <input type="checkbox" checked={this.state.isChecked} onChange={this.handleChecked}/>
+               </div>
+           )
+       }
+   }
+   
+   export default Form_process
+   ```
+
+   Then we can handle changes in the form on the page:
+
+   
+
+<img src="D:\pc\Pictures\formHTML.PNG" alt="formHTML" style="zoom:60%;" />![formHandle](D:\pc\Pictures\formHandle.PNG)
+
+To integrate the event handler into one method:
+
+1. Add *name* entity in form element which is the same as the *state* name to distinguish from others.
+
+2. Obtain the corresponding value according to the type of form element.
+
+3. Change the corresponding *state* in *Change* event handler through `[name]`.
+
+   ```jsx
+   class Form_process extends React.Component {
+       state = {
+           txt: 'aaaaaaaaa',
+           content: '',
+           city: 'bj',
+           isChecked: false
+       } 
+   
+   handleForm = e => {
+   
+           // obtain the current DOM object
+           const target = e.target
+   
+           // Obtain the corresponding value through its type
+           const value = target.type === 'checkbox'
+               ? target.checked
+               : target.value
+   
+           // Obtain the name
+           const name =target.name
+   
+           this.setState({
+               [name]: value
+           })
+       }
+    
+    render() {
+           return (
+               <div>
+                   {/*{ text }*/}
+                   <input type="text" name='txt' value={this.state.txt} onChange={this.handleForm}/>
+                   <br/>
+   
+                   {/* text area */}
+                   <textarea value={this.state.content} name='content' onChange={this.handleForm}/>
+                   <br/>
+   
+                   {/*  pull down menu  */}
+                   <select value={this.state.city} name='city' onChange={this.handleForm}>
+                       <option value="sh">Shanghai</option>
+                       <option value="bj">Beijing</option>
+                       <option value="gz">Guangzhou</option>
+                   </select>
+   
+                   {/*  check box  */}
+                   <input type="checkbox" checked={this.state.isChecked} name='isChecked' onChange={this.handleForm}/>
+               </div>
+           )
+       }
+   }
+   ```
+
+   
