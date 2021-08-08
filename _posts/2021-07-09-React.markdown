@@ -209,7 +209,7 @@ const title1 = (
 ReactDOM.render(title1, document.getElementById('root'))
 ```
 
- Then when running `npm start`, the page rendering in the browser looks like:<img src="D:\pc\Pictures\react1JSX.PNG" alt="react1JSX" style="zoom:60%;" />
+ Then when running `npm start`, the page rendering in the browser looks like:<img src="https://img-blog.csdnimg.cn/4b065341137947cf9897f803a4743323.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="react1JSX" style="zoom:60%;" />
 
 ## React component Creation
 
@@ -626,6 +626,8 @@ To integrate the event handler into one method:
 
 2. Obtain the corresponding value according to the type of form element.
 
+
+
 3. Change the corresponding *state* in *Change* event handler through `[name]`.
 
    ```jsx
@@ -681,4 +683,881 @@ To integrate the event handler into one method:
    }
    ```
 
+
+## Communication Between Components
+
+Components are independent units, which can only own its own data. When we break our functions into several parts, we modularize our functions, so that we can better achieve our functions. During this process, different components unavoidably need to share their properties with each other. To realize these functions, we need to break out the encapsulation of each component, to let them communicate with out side. This process is called components comminication.
+
+### Props
+
++ Components are encapsualated
++ Function of **props**: Receive the data passed to components
++ Passing data: Add properties to tags
++ Receive data: *Function components* receive data through parameter `props`, *Class components* via `this.props`.
++ We can pass any type of data through **props**
++ **props** can only be read, not be modified
++ When using class components, if we write a *constructor*, we should pass `props` to `super()`. Otherwise, we cannot get `props` via constructor
+
+Example of passing **props** though function:
+
+```jsx
+import React from "react";
+import ReactDOM from 'react-dom';
+
+/*
+    props
+ */
+
+//Receive data
+
+const Hello = (props) => {
+    console.log(this.props)
+
+    return(
+        <div>
+            <h1>props:  </h1>
+        </div>
+    )
+}
+
+// Passing data
+ReactDOM.render(<Hello name='Jack' age={19}/>, document.getElementById('props'))
+```
+
+Example of passing **props** through class:
+
+```jsx
+class Props extends React.Component {
+    render() {
+        // console.log(this.props)
+        constructor(props) {
+        // Recommend to pass props to Constructor
+        super(props);
+    }
+        this.props.fn() // passing a function
+        return(
+            <div>
+                <h1>props: {this.props.age}</h1>
+            </div>
+        )
+    }
+}
+
+// Passing data through props
+ReactDOM.render(<Props name='Jack' age={19} colors={['red','blue','green']} fn={() => console.log('This is a function')}/>, document.getElementById('props'))
+```
+
+###  Three means of communication between components
+
+1. Parent => child
+
+   1. Parent provide **state** data
+   2. Add parameter to child component tag, whose value is the data in **state**
+   3. Child component receives the data passed by parent component
+
+   ```jsx
+   class Parent extends React.Component{
+       state = {
+           firstName: 'Wong',
+           lastName: 'Yeah'
+       }
+       render() {
+           return(
+               <div>
+                   Pass data to child components: <Child firstName={this.state.firstName} lastName={this.state.lastName}/>
+               </div>
+           )
+       }
+   }
    
+   const Child = props => {
+       console.log("Child props",props)
+       return(
+           <div className="child">
+               <p>Child component, receiving data passed by pappa: {props.firstName}</p>
+           </div>
+       )
+   }
+   ```
+
+2. Child => Parent
+
+   Use **callback function**, parent component **provides** callback, child function use that callback function, set the parameter of the callback function to be the data to be passed
+
+   1. parent provides a callback function (To receive data)
+   2. pass this function to child component by using **props**
+   3. child component call callback function by using **props**
+   4. pass data back to parent component through child component's parameter
+
+   ```jsx
+   // data from Child component to parent component:
+   class Parent1 extends React.Component {
+       state = {
+           parentMsg: ''
+       }
+   
+       // Provide callback function, to receive data
+       getChildMsg = data => {
+           console.log('receiving msg from child: ', data)
+           this.setState({
+               parentMsg: data
+           })
+       }
+   
+       render() {
+           return(
+               <div className='parent'>
+                   Pappa component: {this.state.parentMsg}
+                   <Child1 getMsg={this.getChildMsg} /> // pass call back function to child
+               </div>
+           )
+       }
+   }
+   
+   // child class
+   class Child1 extends React.Component{
+       state = {
+           msg: 'save Me!'
+       }
+       handleClick = () => {
+           // call the callback function sent by parent component
+           this.props.getMsg(this.state.msg)
+       }
+       
+       render() {
+           return(
+               <div className='child'>
+                   child component: {' '}
+                   <button onClick={this.handleClick}>
+                       hit me to send data to parent component!!!
+                   </button>
+               </div>
+           )
+       }
+   ```
+   
+3. Children => Children
+
+   1. Promote the sharing states to the nearest **public parent component**, and let the public parent component control this state
+   2. Strategy: Promote the sharing states
+   3. responsibilities of parent component: 
+      1. Provide sharing state
+      2. Provide the function to operate the sharing state 
+
+   The below example is to show a simple counter on browse:
+
+   ```jsx
+   // Children to Children
+   class Counter extends React.Component {
+       // Provide sharing state
+       state = {
+           count: 0
+       }
+   
+       // Provide a method to change state
+       onIncrement = () => {
+           console.log("Heeeeeaaaa!!!!")
+           this.setState({
+               count: this.state.count + 1
+           })
+       }
+   
+       render() {
+           return (
+               <div>
+                   <Child2 count={this.state.count}/>
+                   <Child3 onIncrement={this.onIncrement}/>
+               </div>
+           )
+       }
+   }
+   
+   const Child2 = props => {
+       return <h1>Counter: {props.count}</h1>
+   }
+   
+   const Child3 = (props) => {
+       return <button onClick={() => props.onIncrement()}>+1</button>
+   }
+   ```
+
+<img src="https://img-blog.csdnimg.cn/80a9d86c90f848d48ab653e6bb08384b.PNG" alt="ReactCounter" style="zoom:60%;" />
+
+### Context
+
+What should we do if we need to transfer data from **App** which is the outer node to the inner node **Child**?
+
++ We can apply **Context**
+
++ Function: Transfer data across Components (Such as: Theme, Language)
+
+  <img src="https://img-blog.csdnimg.cn/6ecfc3d46e1548cb8fe6521bf22b731c.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="Context" style="zoom:67%;" />
+
+<center>Transfer Process</center>
+
+Steps:
+
+1. Call `React.createContext()` to create **Provider** (to provide data) and **Consumer** (to receive data) these two components
+
+   ```jsx
+   const {Provider, Consumer} = React.createContext
+   ```
+
+2. Use Provider as the **Parent Node**
+
+   ```jsx
+   <Provider>
+       <div className='context'>
+           <Node />
+       </div>
+   </Provider>
+   ```
+
+3. Set a **value** property, which is represented as the data to be passed
+
+   ```jsx
+   <Provider value='pink'>
+   ```
+
+4. Call **Consumer** to receive data
+
+   ```jsx
+   <Consumer>
+       {data => <span>I am a Child Node -- {data}</span>}
+   </Consumer>
+   ```
+
+For example, in the below components,  between **Provider** and **Consumer**, there are nested components which are respectively **Node** && **SubNode**, thus, it is not so clear to transfer data through this nested structure by passing **props** layer by layer. We use **Provider** and **Consumer** to transfer data.  
+
+```jsx
+import React from 'react'
+import * as ReactDOM from "react-dom";
+
+/*
+    Context
+ */
+
+const {Provider, Consumer} = React.createContext()
+
+class Context extends React.Component {
+    render() {
+        return (
+            <Provider value='pink'>
+                <div className='context'>
+                    <Node/>
+                </div>
+            </Provider>
+        )
+    }
+}
+
+const Node = props => {
+    return (
+        <div className='node'>
+            <SubNode/>
+        </div>
+    )
+}
+
+const SubNode = props => {
+    return (
+        <div className='subnode'>
+            <Child/>
+        </div>
+    )
+}
+
+const Child = props => {
+    return (
+        <div className='child'>
+            <Consumer>
+                {data => <span>I am a Child Node -- {data}</span>}
+            </Consumer>
+        </div>
+    )
+}
+
+ReactDOM.render(<Context/>, document.getElementById('context'))
+```
+
+### **Children** property of **props**
+
++ **Children**: Represents the child Node of component tag. When the component tag has a child Node, **props** has this property.
++ **Children** is the same as normal **props**, the value of which can be any kind of value (Text, React const, component, even function)
+
+```jsx
+// Children property
+const Children = props => {
+    console.log(props)
+    return(
+        <div>
+            <h1>The children node of this component: </h1>
+            {props.children}
+        </div>
+    )
+}
+
+// Children is Text 
+//ReactDOM.render(<Children>I am a children </Children>, document.getElementById('Children'))
+// Children is a tag
+ReactDOM.render(<Children>
+        <p>I am a children node, which is a p tag</p>
+    </Children>,
+    document.getElementById('Children'))
+```
+
+### Props Check
+
+When passing **Props** across components, users cannot know its type. If a user pass a props to a worry position which requires another specific type, the error cannot be prevented by observation. 
+
++ We can install an extra props checking tool via `npm i props-types`. 
+
++ Import `prop-type` in the project
+
++ Use `ComponentName.propTrpes = {}` to add checking rules for components
+
++ We can point our checking rules via `PropTypes` object.
+
+  ```jsx
+  import PropTypes from 'prop-types'
+  
+  // Using PropTypes to check props type error
+  const CheckProp = props => {
+      const arr = props.colors
+      const list = arr.map((item, index) => <li key={index}>{item.name}</li> )
+      return <ul>{list}</ul>
+  }
+  
+  // add props checking rules
+  CheckProp.propTypes = {
+      // If the type of color is not an array, error will be generated, user can know exactly which type color needs
+      colors: PropTypes.array
+  }
+  ReactDOM.render(<CheckProp colors={19} />, document.getElementById('props'))
+  ```
+
+  We can see that colors in the above code requires an *array*, however, we give a type of *Integer*, thus, error code generates:
+
+  
+
+<img src="https://img-blog.csdnimg.cn/3115ece23251467684c0e8f1fb01b98e.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="typeError" style="zoom:60%;" />
+
+<center>Type error generated by PropTypes</center>
+
+​	if we give the *colors* an *array* instead of an *Integer*, the error disappears. For example:
+
+```jsx
+ReactDOM.render(<CheckProp colors={['red', 'blue']} />, document.getElementById('props'))
+```
+
++ Rule for **Props checking**
+
+  1. Types: *array*, *bool*, *func*, *number*, *object*， *string*
+  2. React component type: *element*
+  3. Required: *isRequired*
+
+  If we need to add *proptype checking* for one class for example:
+
+  ```jsx
+  // Add props type checking
+  // type of a:      number
+  // type of fn:     func and isRequired
+  // type of tag:    element
+  // type of filter: object: ({area:'Shanghai', price: 1999})
+  
+  CheckProp.propTypes = {
+      a : PropTypes.number,
+      fn : PropTypes.func.isRequired,
+      tag: PropTypes.element,
+      filter: PropTypes.shape({
+          area: PropTypes.string,
+          price: PropTypes.number
+      })
+  }
+  ```
+
+
+### Lifecycle of a component
+
++ Definition: The process of which **Components** are created and then loaded to run in a particular webpage, then destroyed if not being used.
++ Every sage of a lifecycle is accompanied by some functions, these functions are called ***hook function***
++  Function of ***hook function***: to provide chance for developers to handle components in multiple stages.
++ **Only class components have lifecycle**
+
+#### Three stages of components' lifeCycle:
+
+<img src="https://img-blog.csdnimg.cn/b58c417956ab4216ba37705ef4094c32.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="lifeCycle" style="zoom:67%;" />
+
+<center>LifeCycle of a component</center>
+
+1. On creation:
+
+   Sequence of the three hook functions: 
+
+   Constructor => render() => componentDidMount
+
+   | Hook function     | Trigger Time                                   | Function                                                |
+   | ----------------- | ---------------------------------------------- | ------------------------------------------------------- |
+   | constructor       | First to trigger when the component is created | 1. Initialize *state*. 2. Bind `this` for event handler |
+   | render            | Every time to refresh the component            | Render UI (Cautions: Do not call `setState()` )         |
+   | componentDidMount | After DOM rendering                            | 1. Send *HttpRequest* (ajax) 2. Operate on *DOM*        |
+
+2. On refreshing (Updating):
+
++ Triggers: 1. `SetState()`, `forceUpdate()`, when the component receive new`props`.
+
++ Any kind of the above three function changes, the components will be refreshed
+
++ Sequence: 
+
+  render() => componentDidUpdate()
+
+| Hook function      | Trigger Time                        | Function                                                     |
+| ------------------ | ----------------------------------- | ------------------------------------------------------------ |
+| render             | Every time to refresh the component | Render UI (The same as on create stage)                      |
+| componentDIdUpdate | After components are updated        | 1.  Send *HttpRequest* 2. Operate on *DOM*  3. If need to call `setState()` to refresh state, it must be put in the same if condition, otherwise, it will be nested |
+
+
+
+3. On Unmount:
+
+   + Triggers: When the components disappear from a page
+
+   | Hook function        | Trigger time | function                |
+   | -------------------- | ------------ | ----------------------- |
+   | componentWillUnmount | Uninstall    | Execute wiping out jobs |
+
+For example: In the below instance, `HitTom` is a parent component, you can hit a button to hit Tom, at the same time, a timer will start, if the counter is larger than 3, 'Tom is dead!!!" will be displayed, meanwile, child component will be uninstalled and the timer will be stopped by `ComponentWillUmount()` .
+
+```jsx
+// Hook functions
+class HitTom extends React.Component {
+
+    // First to execute
+    constructor(props) {
+        super(props)
+        this.state = {
+            count: 0
+        }
+    }
+
+    handleClick = () => {
+        this.setState({
+            count: this.state.count + 1
+        })
+    }
+
+    render() {
+        return (
+            <div>
+                {
+                    this.state.count > 3
+                        ? <p>Tom is dead!!!</p>
+                        : <LifeCycle count={this.state.count}/>
+                }
+                <button onClick={this.handleClick}>Hit Tom!!!</button>
+            </div>
+        )
+    }
+}
+
+class LifeCycle extends React.Component {
+
+    // on refreshing
+    componentDidMount() {
+        // Open a Timer
+        this.timerId = setInterval(() => {
+            console.log('Timer on going......')
+        }, 500)
+    }
+
+    render() {
+        return <h1>Times of which Tom was beaten: {this.props.count}</h1>
+    }
+
+    // Clear timer when the component is uninstalled
+    componentWillUnmount() {
+        console.warn('LifeCycle hook function: componentWillUnmount')
+        clearInterval(this.timerId)
+    }
+}
+```
+
+### High-level components
+
+High-level Component: (*HOC*, higher-Order Component) is a function, which receives the components to be wrapped, and returns the enhanced component. The inner of *HOC* creates a **class component**, in which provides the state and logic resolving codes that can be reused, and it passes the state and logic to the **WrappedComponent** via **prop**.
+
++ Purpose: To realize recycle of states and logic.
++ Utilizes **Wrapping** mode: 
++ For example: Phone, acquires protection. Phone shell: Provide protection. High-level components is like a phone shell, enhances functions of components by wrapping them.
+
+Steps:
+
+1. Write a function, which is headed with ***with***.
+
+2. Set the designated function, which needs to be fronted by a capital letter (To use as the component to be rendered).
+3. Create a class inside the function, which provides the logic and state to be reused, and return it.
+4. In this component, it renders the passed-in component, and passes the state via **props**.
+5. Call this *HOC*, and pass in the necessary component, get the enhanced component via the return value, and render it in the webpage.
+
+In the below example, we realizes a function to capture the position of our mouse:
+
+```jsx
+import React from "react";
+import ReactDom from 'react-dom'
+import img from './img/cat.jpg'
+
+/*
+* High level component
+*
+*/
+
+// Create a high-level component
+function withMouse(WrappedComponent){
+    class Mouse extends React.Component{
+        // State of the mouse:
+        state = {
+            x: 0,
+            y:0
+        }
+
+    	// mouse position handler
+        handleMouseMove = e => {
+            this.setState({
+                x:e.clientX,
+                y:e.clientY
+            })
+        }
+
+        // control the state of the mouse
+        componentDidMount() {
+            window.addEventListener('mousemove', this.handleMouseMove)
+        }
+
+        // Untie the event handler
+        componentWillUnmount() {
+            window.removeEventListener('mousemove', this.handleMouseMove)
+        }
+
+        // Pass the state by props to the function to be wrapped
+        render(){
+            return <WrappedComponent {...this.state} />
+        }
+    }
+    return Mouse
+}
+
+// call the HOC
+const Position = props => (
+    <p>
+        Current Mouse Position: (x: {props.x}, y: {props.y})
+    </p>
+)
+
+// obtain enhanced component
+const MousePosition = withMouse(Position)
+
+// Cat catch mouse
+const Cat = props => (
+    <img src={img} alt="" style={ {
+        position: "absolute",
+        top: props.y +350
+        ,
+        left: props.x - 64,
+        width: 100,
+        height: "auto" 
+    } } />
+)
+
+const CatWithMouse = withMouse(Cat)
+
+class HOC extends React.Component {
+    render() {
+        return(
+            <div>
+                <h1>
+                    high-level component
+                    {/* Enhanced component */}
+                    <MousePosition />
+                    <CatWithMouse />
+                </h1>
+            </div>
+        )
+    }
+}
+
+ReactDom.render(<HOC />, document.getElementById('HOC'))import React from "react";
+```
+
+#### Setup DisplayName for passed in components
+
++ Problems when using *HOC*: The names of passed in functions are the same, It is impossible to distinguish different function when they are all passed in the same high-level component.
++ Reason: In the default condition, *React* uses component name as **DisplayName**.
++ Solution: Setup ***displayName*** for high-level components to distinguish them when debugging. (In *React dev tool*)
+
+```jsx
+// Set display name
+Mouse.displayName = `WithMouse${getDisplayName(WrappedComponent)}`
+
+// getDisplayName of function
+function getDisplayName(WrappedComponent) {
+    return WrappedComponent.displayName || WrappedComponent.name || 'Component'
+}
+```
+
+### React Component Sum
+
++ Communication between components are the necessary part in building a React app
++ **props** is the key to parameter transferring between components
++ State promotion is the usual way of communication
++ **Hook Function** can be executed at particular time to get special jobs done
++ Simple model of components: **(state, props) => UI**
+
+
+
+## Principles in React 
+
+###  Asynchronization of `SetState()`
+
++ Cautious: When using this function, the `setState()` on the back is independent of the results of the front `setState()`, although it can be called multiple times in a class. 
+
++ We can call multiple times of `setState()`, but it will only trigger `render()` once.
+
++ Recommended syntax: 
+
+  ```jsx
+   this.setState((state, props) => {
+              return {
+                  count: state.count + 1
+              }
+              })
+  ```
+
+  + Usage: `this.setState((state,props) => {})`
+  + parameter `state`: the newest `state`
+  + parameter `props`: the newest `props`
+
+### Second parameter of `setState()`
+
++ Circumstance: When the page refreshing is done, it will be executed
+
++ syntax: `setState(updater, [callback])`
+
+  ```jsx
+  onIncrement=() => {
+      console.log("clicking....")
+      // Asynchronization, not recommended
+      // this.setState({
+      //     count: this.state.count + 1
+      // })
+  
+      // Recommended:
+      this.setState((state, props) => {
+          return {
+              count: state.count + 1
+          }
+          },
+          // execute after the page is refreshed
+          () => {
+          console.log('Refreshing accomplished: ', this.state.count)
+              document.title = 'Title after refreshing: ' + this.state.count
+          })
+      console.log(this.state.count) // less 1 
+  }
+  ```
+
+  <img src="https://img-blog.csdnimg.cn/8ed6af37f1dc4b14b39ee1ce8c8967d0.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="setStateResult" style="zoom:60%;" />
+
+  <img src="https://img-blog.csdnimg.cn/be50ea29cdff4a3c8cf70aecb7b2e3e1.PNG" alt="titleResultofSetState" style="zoom:60%;" />
+
+The picture shows that call back function happens right after the rendering is done. 
+
+#### Transfer process of ***JSX*** syntax
+
++ ***JSX*** is a simplized syntax of `createElement()`
++ ***JSX*** syntax is compiled as `createElement()` by *@babel/preset-react*
++ *React* element: is a object, to describe what you see on the screen
++ ***JSX*** syntax => `createElement()` => *React* element
+
+## React Router
+
+Modern front-end applications are usually **SPA** (Single Page Application), that is to say the application has only one page of *HTML*. Due to its light-weighted body, low pressure for server, it is popular. To better utilize the technique that one *HTML* controls multiple pages, **front-end router** is born.
+
++ Function of **front-end router** : navigate from one view (page) to another view (page)
++ **front-end router** is series of rules which defines mapping. In ***React***, it is demonstrated as  the relation between **URL** and **Components**.
+
+Basic steps:
+
+1. Install via `npm i react-router-dom`
+2. Import three core component: ***Router/Route/Link***
+3. Wrap the whole component through **Router** component
+4. Make a navigate menu via **link component** (Routing entrance)
+
+This is the basic router of React:
+
+```jsx
+import React from "react";
+import ReactDOM from 'react-dom'
+
+
+import {BrowserRouter as Router, Route, Link} from "react-router-dom";
+
+const First = () => <p>This is the content of the first page</p>
+
+// Wrap the whole component by <Router></Router>
+class BasicRouter extends React.Component {
+    render() {
+        return(
+            <Router>
+                <div>
+                    <h1>This is the basic react router</h1>
+
+                    {/* designate the entrance of the router */}
+                    <Link to="/first"> Page one</Link>
+
+                    {/*  designate the exit of router  */}
+                    <Route path="/first" component={First}/>
+                </div>
+            </Router>
+        )
+    }
+}
+
+ReactDOM.render(<BasicRouter />, document.getElementById('Router'))
+```
+
+### Router description
+
++ **Router** component: It wraps the whole application, and one **React** App only need to use it once.
+
++ Two Basic Router: **BrowsRouter** && **HarshRouter**.
+
++ HashRouter: Realize through the hash value of the *URL* (localhost:3000/#/first)
+
++ **Link**: To use as the entrance (href) of the router (a tag)
+
+  ```jsx
+  // to: pathname (location.pathname) in the browser url braket  
+  <Link to="/first"> Page one</Link>
+  ```
+
++ **Route**: To show the related information of the designated router
+
+```jsx
+// path: Routing rule
+// component: The components to be described
+// can decide where the routing component is placed
+<Route path="/first" component={First}/>
+```
+
+### Logical Routing
+
++ Circumstance: When clicking the login button, it jumps to the login page. After the login is done, it jumps back.
++ Programmable routing: Page routing through ***JS*** code.
++ `push(path)`: Jump to a particular page, `path` indicates the path to be jumped to
++ `go(n)`: Forward or back to a particular page, n indicates the number of pages to move (-1 is represented as move back to the last page)
+
+The below example shows a simple page containing the function of login and return to home page. When hitting the button *Go to the login page*, it displays the login page:
+
+<img src="https://img-blog.csdnimg.cn/9bb3d4cec51246068e2310b2ec439b34.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0hoaGhoYW9oYW8=,size_16,color_FFFFFF,t_70" alt="loginPage" style="zoom:60%;" /><img src="D:\pc\Pictures\loginPage1.PNG" alt="loginPage1" style="zoom:60%;" />
+
+<center>Login page after clicking the button</center>
+
+Then, when hitting *Hit me to Login~* it displays the home page:
+
+<img src="https://img-blog.csdnimg.cn/1c8c1afdb26a4aa1b16d0b2a86fad8c2.PNG" alt="Homepage" style="zoom:60%;" /><img src="D:\pc\Pictures\homePage1.PNG" alt="homePage1" style="zoom:60%;" />
+
+<center>Home page after login</center>
+
+```jsx
+import React from "react";
+import ReactDOM from "react-dom"
+
+import {BrowserRouter as Router, Route, Link} from "react-router-dom";
+
+class Login extends React.Component {
+
+    handleLogin = () => {
+        // routing jump
+        this.props.history.push('/home')
+
+    }
+
+    render() {
+        return (
+            <div>
+                <p>
+                    This is the login page!!
+                </p>
+                <button onClick={this.handleLogin}>
+                    Hit me to Login~
+                </button>
+            </div>
+        )
+    }
+}
+
+const Home = props => {
+
+    const handleBack = () => {
+        // go(-1) indicates to go to the last page
+        props.history.go(-1)
+    }
+    return (
+        <div>
+            <h2>
+                This is the home page
+            </h2>
+            <button onClick={handleBack}>Return to the login page~</button>
+        </div>
+    )
+}
+
+
+const AppLogin = () => (
+    <Router>
+        <div>
+            <h1>
+                programmable routing:
+            </h1>
+            <Link to="/login">
+                Go to the login page
+            </Link>
+            <Route path="/login" component={Login}/>
+            <Route path="/home" component={Home}/>
+        </div>
+    </Router>
+)
+
+export default AppLogin
+```
+
+### Default Route
+
++ The default path is: `/`
+
+  ```jsx
+  <Route path="/" component={Home} />
+  ```
+
+  However, when we use other routes, this default router will be filtered out. This is because React router is a approximate string matching, the routers will be found as long as the string is the beginning of the routing pattern.
+
+  | Path   | pathname to be matched                                       |
+  | ------ | ------------------------------------------------------------ |
+  | /      | all the pathes                                               |
+  | /first | ***/first*** or ***/first/a*** or ***/first/a/b ......*** ...... |
+
+  
+
+  To get rid of this condition, we need apply exact matching:
+
++ Add ***exact*** entity in **Route** component, it will become exact matching mode
+
++ **Exact matching:** Only when ***path*** is exactly the same as ***pathname***, it will be matched to the router
+
+  ```jsx
+  // now, this component will only match pathname="/" this exact condition
+  <Route exact path="/" component=... />
+  ```
+
+  
