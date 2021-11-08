@@ -215,7 +215,7 @@ Services match a set of Pods using labels and selectors, a grouping primitive th
 ## Kubernetes Object Model
 
 Kubernetes has a very rich object model, representing different persistent entities in the **Kubernetes cluster**. Those entities describe:
- 
+
 + What containerized applications we are running and on which node
 + Application resource consumption
 + Different policies attached to applications, like restart/upgrade policies, fault tolerance, etc.
@@ -321,7 +321,7 @@ To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
     C:\Users\pc>kubectl get nodes --show-labels
     NAME             STATUS   ROLES    AGE    VERSION          LABELS
     docker-desktop   Ready    master   3d8h   v1.16.6-beta.0   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=docker-desktop,kubernetes.io/os=linux,node-role.kubernetes.io/master=
-
+    
     ```
 ### Kubernetes Deployment
 
@@ -559,7 +559,7 @@ Running multiple instances of an application will require a way to distribute th
 
 Once you have multiple instances of an Application running, you would be able to do Rolling updates without downtime. 
 1. To list our deployments apply the command:
-`kubectl get deployments`
+   `kubectl get deployments`
 
     ```shell
     C:\Users\pc>kubectl get deployments
@@ -578,9 +578,9 @@ Once you have multiple instances of an Application running, you would be able to
     `kubectl get rs`
 
    ```shell
-  C:\Users\pc>kubectl get rs
-  NAME                             DESIRED   CURRENT   READY   AGE
-  kubernetes-bootcamp-69fbc6f4cf   1         1         0       17h
+    C:\Users\pc>kubectl get rs
+    NAME                             DESIRED   CURRENT   READY   AGE
+    kubernetes-bootcamp-69fbc6f4cf   1         1         0       17h
    ```
    Notice that the name of the ReplicaSet is always formatted as:
 
@@ -591,46 +591,46 @@ Once you have multiple instances of an Application running, you would be able to
 
    + **DESIRED** displays the desired number of replicas of the application, which you define when you create the Deployment. This is the desired state.
    + **CURRENT** displays how many replicas are currently running.
-    
+   
 3. Next, let’s scale the Deployment to 4 replicas. We’ll use the `kubectl scale` command, followed by the **deployment type**, **name** and **desired number** of instances:
 
    ```shell
-  C:\Users\pc>kubectl scale deployments/kubernetes-bootcamp --replicas=4
-  deployment.apps/kubernetes-bootcamp scaled
-    ```
+    C:\Users\pc>kubectl scale deployments/kubernetes-bootcamp --replicas=4
+    deployment.apps/kubernetes-bootcamp scaled
+   ```
 
    To list your Deployments once again, use `get deployments`:
    ```shell
-  C:\Users\pc>kubectl get deployments
-  NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
-  kubernetes-bootcamp   0/4     4            0           17
+    C:\Users\pc>kubectl get deployments
+    NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+    kubernetes-bootcamp   0/4     4            0           17
    ```
     The change was applied, and we have 4 instances of the application available. Next, let’s check if the number of Pods changed:
 
     ```shell
-  C:\Users\pc>kubectl get pods -o wide
-  NAME                                   READY   STATUS             RESTARTS   AGE    IP           NODE             NOMINATED NODE   READINESS GATES
-  kubernetes-bootcamp-69fbc6f4cf-8xbnj   0/1     ImagePullBackOff   0          74m    10.1.0.173   docker-desktop   <none>           <none>
-  kubernetes-bootcamp-69fbc6f4cf-n4mtr   0/1     ImagePullBackOff   0          2m8s   10.1.0.176   docker-desktop   <none>           <none>
-  kubernetes-bootcamp-69fbc6f4cf-pt96f   0/1     ImagePullBackOff   0          2m9s   10.1.0.175   docker-desktop   <none>           <none>
-  kubernetes-bootcamp-69fbc6f4cf-xpkxl   0/1     ErrImagePull       0          2m8s   10.1.0.174   docker-desktop   <none>           <none>
-   ```
+    C:\Users\pc>kubectl get pods -o wide
+    NAME                                   READY   STATUS             RESTARTS   AGE    IP           NODE             NOMINATED NODE   READINESS GATES
+    kubernetes-bootcamp-69fbc6f4cf-8xbnj   0/1     ImagePullBackOff   0          74m    10.1.0.173   docker-desktop   <none>           <none>
+    kubernetes-bootcamp-69fbc6f4cf-n4mtr   0/1     ImagePullBackOff   0          2m8s   10.1.0.176   docker-desktop   <none>           <none>
+    kubernetes-bootcamp-69fbc6f4cf-pt96f   0/1     ImagePullBackOff   0          2m9s   10.1.0.175   docker-desktop   <none>           <none>
+    kubernetes-bootcamp-69fbc6f4cf-xpkxl   0/1     ErrImagePull       0          2m8s   10.1.0.174   docker-desktop   <none>           <none>
+    ```
 
 4. There are 4 `Pods` now, with different `IP addresses`. The change was registered in the Deployment events log. To check that, use the `describe` command:
 
    ```shell
-  C:\Users\pc>kubectl describe deployments/kubernetes-bootcamp
-  Name:                   kubernetes-bootcamp
-  Namespace:              default
-  CreationTimestamp:      Thu, 16 Jul 2020 17:42:50 +0800
-  Labels:                 app=kubernetes-bootcamp
-  Annotations:            deployment.kubernetes.io/revision: 1
-  Selector:               app=kubernetes-bootcamp
-  Replicas:               4 desired | 4 updated | 4 total | 0 available | 4 unavailable
-  StrategyType:           RollingUpdate
-  inReadySeconds:        0
-  RollingUpdateStrategy:  25% max unavailable, 25% max surge
-  Pod Template:
+    C:\Users\pc>kubectl describe deployments/kubernetes-bootcamp
+    Name:                   kubernetes-bootcamp
+    Namespace:              default
+    CreationTimestamp:      Thu, 16 Jul 2020 17:42:50 +0800
+    Labels:                 app=kubernetes-bootcamp
+    Annotations:            deployment.kubernetes.io/revision: 1
+    Selector:               app=kubernetes-bootcamp
+    Replicas:               4 desired | 4 updated | 4 total | 0 available | 4 unavailable
+    StrategyType:           RollingUpdate
+    inReadySeconds:        0
+    RollingUpdateStrategy:  25% max unavailable, 25% max surge
+    Pod Template:
     Labels:  app=kubernetes-bootcamp
     Containers:
      kubernetes-bootcamp:
@@ -640,44 +640,45 @@ Once you have multiple instances of an Application running, you would be able to
       Environment:  <none>
       Mounts:       <none>
     Volumes:        <none>
-  Conditions:
+    Conditions:
    Type           Status  Reason
    ----           ------  ------
     Available      False   MinimumReplicasUnavailable
    Progressing    True    ReplicaSetUpdated
-  OldReplicaSets:  <none>
-  NewReplicaSet:   kubernetes-bootcamp-69fbc6f4cf (4/4 replicas created)
-  Events:
+    OldReplicaSets:  <none>
+    NewReplicaSet:   kubernetes-bootcamp-69fbc6f4cf (4/4 replicas created)
+    Events:
     Type    Reason             Age    From                   Message
    ----    ------             ----   ----                   -------
    Normal  ScalingReplicaSet  3m26s  deployment-controller  Scaled up replica set kubernetes-bootcamp-69fbc6f4cf to 4
 
-    ```
+   ```
     You can also view in the output of this command that there are 4 replicas now.
 
 5. To scale down the Service to 1 replicas, run again the scale command:
 
     ```shell
     kubectl scale deployments/kubernetes-bootcamp --replicas=1
-
+    
     ```
     When opening in the Kubernetes Dashboard, Theis command is equivalent to the operation below:
     ![ScaleDown](https://xg-ctfs.ftn.qq.com/ftn_handler/c0751298ec2a1530a157c2660682db1d094fb0fca07f610527583cb4b12caa19e224cd6b7fc4ea78d034e16cbe30c9e79231228046e10897cd8ff82392b2ddb2/?fname=*.png&pictype=scaled&size=1024*768)
+
     <center>Scale Down</center>
 
 6. List the Deployments to check if the change was applied with the get deployments command:
     ```shell
     PS C:\Windows\system32> kubectl get deployments
-NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
-kubernetes-bootcamp   0/1     1            0           20h
+    NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+    kubernetes-bootcamp   0/1     1            0           20h
     ```
 
 7. The number of replicas decreased to 1. List the number of Pods, with `get pods`:
 
     ```shell
     C:\Windows\system32> kubectl get pods -o wide
-NAME                                   READY   STATUS         RESTARTS   AGE    IP           NODE             NOMINATED NODE   READINESS GATES
-kubernetes-bootcamp-69fbc6f4cf-8xbnj   0/1     ErrImagePull   0          4h6m   10.1.0.187   docker-desktop   <none>           <none>
+    NAME                                   READY   STATUS         RESTARTS   AGE    IP           NODE             NOMINATED NODE   READINESS GATES
+    kubernetes-bootcamp-69fbc6f4cf-8xbnj   0/1     ErrImagePull   0          4h6m   10.1.0.187   docker-desktop   <none>           <none>
     ```
 ### Performing a Rolling Update
 
@@ -712,16 +713,16 @@ Rolling updates allow the following actions:
 1. To update the image of the application to version 2, use the set image command, followed by the deployment name and the new image version:
 
     ```shell
-C:\Users\pc>kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
-deployment.apps/kubernetes-bootcamp image updated
+    C:\Users\pc>kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=jocatalin/kubernetes-bootcamp:v2
+    deployment.apps/kubernetes-bootcamp image updated
     ```
 2. The command notified the Deployment to use a different image for your app and initiated a rolling update. Check the status of the new Pods, and view the old one terminating with the get pods command:
     ```shell
-C:\Users\pc>kubectl get pods
-NAME                                   READY   STATUS              RESTARTS   AGE
-kubernetes-bootcamp-69fbc6f4cf-8xbnj   0/1     ImagePullBackOff    0          4h29m
-kubernetes-bootcamp-b4d9f565-77b9b     0/1     ContainerCreating   0          23s
-
+   C:\Users\pc>kubectl get pods
+   NAME                                   READY   STATUS              RESTARTS   AGE
+   kubernetes-bootcamp-69fbc6f4cf-8xbnj   0/1     ImagePullBackOff    0          4h29m
+   kubernetes-bootcamp-b4d9f565-77b9b     0/1     ContainerCreating   0          23s
+   
    ```
 3. Verify an Update
 
@@ -729,50 +730,50 @@ kubernetes-bootcamp-b4d9f565-77b9b     0/1     ContainerCreating   0          23
         `describe serevice`
 
     ```shell
-C:\Users\pc>kubectl describe services/kubernetes-bootcamp
-Name:                     kubernetes-bootcamp
-Namespace:                default
-Labels:                   app=kubernetes-bootcamp
-Annotations:              <none>
-Selector:                 app=kubernetes-bootcamp
-Type:                     NodePort
-IP:                       10.111.6.29
-LoadBalancer Ingress:     localhost
-Port:                     <unset>  8080/TCP
-TargetPort:               8080/TCP
-NodePort:                 <unset>  32703/TCP
-Endpoints:                10.1.0.188:8080
-Session Affinity:         None
-External Traffic Policy:  Cluster
-Events:                   <none>
-
+    C:\Users\pc>kubectl describe services/kubernetes-bootcamp
+    Name:                     kubernetes-bootcamp
+    Namespace:                default
+    Labels:                   app=kubernetes-bootcamp
+    Annotations:              <none>
+    Selector:                 app=kubernetes-bootcamp
+    Type:                     NodePort
+    IP:                       10.111.6.29
+    LoadBalancer Ingress:     localhost
+    Port:                     <unset>  8080/TCP
+    TargetPort:               8080/TCP
+    NodePort:                 <unset>  32703/TCP
+    Endpoints:                10.1.0.188:8080
+    Session Affinity:         None
+    External Traffic Policy:  Cluster
+    Events:                   <none>
+    
     ```
     The update can be confirmed also by running a rollout status command:
     
     ```shell
-C:\Users\pc>kubectl rollout status deployments/kubernetes-bootcamp
-deployment "kubernetes-bootcamp" successfully rolled out
-
+    C:\Users\pc>kubectl rollout status deployments/kubernetes-bootcamp
+    deployment "kubernetes-bootcamp" successfully rolled out
+    
     ```
     To view the current image version of the app, run a describe command against the Pods:
 
     ```shell
-C:\Users\pc>kubectl describe pods
-Name:         kubernetes-bootcamp-b4d9f565-77b9b
-Namespace:    default
-Priority:     0
-Node:         docker-desktop/192.168.65.3
-Start Time:   Fri, 17 Jul 2020 14:38:53 +0800
-Labels:       app=kubernetes-bootcamp
+    C:\Users\pc>kubectl describe pods
+    Name:         kubernetes-bootcamp-b4d9f565-77b9b
+    Namespace:    default
+    Priority:     0
+    Node:         docker-desktop/192.168.65.3
+    Start Time:   Fri, 17 Jul 2020 14:38:53 +0800
+    Labels:       app=kubernetes-bootcamp
               pod-template-hash=b4d9f565
-Annotations:  <none>
-Status:       Running
-IP:           10.1.0.188
-IPs:
-  IP:           10.1.0.188
-Controlled By:  ReplicaSet/kubernetes-bootcamp-b4d9f565
-Containers:
-  kubernetes-bootcamp:
+    Annotations:  <none>
+    Status:       Running
+    IP:           10.1.0.188
+    IPs:
+    IP:           10.1.0.188
+    Controlled By:  ReplicaSet/kubernetes-bootcamp-b4d9f565
+    Containers:
+    kubernetes-bootcamp:
     Container ID:   docker://f25cfbffbc2757eaaf37ae534d82a4ffbb919198e542812d0e5c876a10f18bd3
     Image:          jocatalin/kubernetes-bootcamp:v2
     Image ID:       docker-pullable://jocatalin/kubernetes-bootcamp@sha256:fb1a3ced00cecfc1f83f18ab5cd14199e30adc1b49aa4244f5d65ad3f5feb2a5
@@ -785,24 +786,24 @@ Containers:
     Environment:    <none>
     Mounts:
       /var/run/secrets/kubernetes.io/serviceaccount from default-token-vgwdh (ro)
-Conditions:
-  Type              Status
-  Initialized       True
-  Ready             True
-  ContainersReady   True
-  PodScheduled      True
-Volumes:
-  default-token-vgwdh:
+    Conditions:
+    Type              Status
+    Initialized       True
+    Ready             True
+    ContainersReady   True
+    PodScheduled      True
+    Volumes:
+    default-token-vgwdh:
     Type:        Secret (a volume populated by a Secret)
     SecretName:  default-token-vgwdh
     Optional:    false
-QoS Class:       BestEffort
-Node-Selectors:  <none>
-Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+    QoS Class:       BestEffort
+    Node-Selectors:  <none>
+    Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
                  node.kubernetes.io/unreachable:NoExecute for 300s
-Events:
-  Type    Reason     Age    From                     Message
-  ----    ------     ----   ----                     -------
+    Events:
+    Type    Reason     Age    From                     Message
+----    ------     ----   ----                     -------
   Normal  Scheduled  13m    default-scheduler        Successfully assigned default/kubernetes-bootcamp-b4d9f565-77b9b to docker-desktop
   Normal  Pulling    13m    kubelet, docker-desktop  Pulling image "jocatalin/kubernetes-bootcamp:v2"
   Normal  Pulled     7m38s  kubelet, docker-desktop  Successfully pulled image "jocatalin/kubernetes-bootcamp:v2"
@@ -815,46 +816,46 @@ Events:
     Let's perform another update, and deploy image tagged as `v10`:
 
     ```shell
-C:\Users\pc>kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10
-deployment.apps/kubernetes-bootcamp image updated
-    ``` 
+    C:\Users\pc>kubectl set image deployments/kubernetes-bootcamp kubernetes-bootcamp=gcr.io/google-samples/kubernetes-bootcamp:v10
+    deployment.apps/kubernetes-bootcamp image updated
+    ```
     Use get deployments to see the status of the deployment:
 
     ```shell
-C:\Users\pc>kubectl get deployments
-NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
-kubernetes-bootcamp   1/1     1            1           21h
-
+    C:\Users\pc>kubectl get deployments
+    NAME                  READY   UP-TO-DATE   AVAILABLE   AGE
+    kubernetes-bootcamp   1/1     1            1           21h
+    
     ```
 
     And something is wrong… We do not have the desired number of Pods available. List the Pods again:
 
     ```shell
-C:\Users\pc>kubectl get pods
-NAME                                   READY   STATUS         RESTARTS   AGE
-kubernetes-bootcamp-6b4c55d8fc-cgw94   0/1     ErrImagePull   0          2m46s
-kubernetes-bootcamp-b4d9f565-77b9b     1/1     Running        0          19m
+    C:\Users\pc>kubectl get pods
+    NAME                                   READY   STATUS         RESTARTS   AGE
+    kubernetes-bootcamp-6b4c55d8fc-cgw94   0/1     ErrImagePull   0          2m46s
+    kubernetes-bootcamp-b4d9f565-77b9b     1/1     Running        0          19m
     ```
 
     A describe command on the Pods should give more insights:
 
     ```shell
-C:\Users\pc>kubectl describe pods
-Name:         kubernetes-bootcamp-6b4c55d8fc-cgw94
-Namespace:    default
-Priority:     0
-Node:         docker-desktop/192.168.65.3
-Start Time:   Fri, 17 Jul 2020 14:55:23 +0800
-Labels:       app=kubernetes-bootcamp
+    C:\Users\pc>kubectl describe pods
+    Name:         kubernetes-bootcamp-6b4c55d8fc-cgw94
+    Namespace:    default
+    Priority:     0
+    Node:         docker-desktop/192.168.65.3
+    Start Time:   Fri, 17 Jul 2020 14:55:23 +0800
+    Labels:       app=kubernetes-bootcamp
               pod-template-hash=6b4c55d8fc
-Annotations:  <none>
-Status:       Pending
-IP:           10.1.0.189
-IPs:
-  IP:           10.1.0.189
-Controlled By:  ReplicaSet/kubernetes-bootcamp-6b4c55d8fc
-Containers:
-  kubernetes-bootcamp:
+    Annotations:  <none>
+    Status:       Pending
+    IP:           10.1.0.189
+    IPs:
+    IP:           10.1.0.189
+    Controlled By:  ReplicaSet/kubernetes-bootcamp-6b4c55d8fc
+    Containers:
+    kubernetes-bootcamp:
     Container ID:
     Image:          gcr.io/google-samples/kubernetes-bootcamp:v10
     Image ID:
@@ -867,24 +868,24 @@ Containers:
     Environment:    <none>
     Mounts:
       /var/run/secrets/kubernetes.io/serviceaccount from default-token-vgwdh (ro)
-Conditions:
-  Type              Status
-  Initialized       True
-  Ready             False
-  ContainersReady   False
-  PodScheduled      True
-Volumes:
-  default-token-vgwdh:
+    Conditions:
+    Type              Status
+    Initialized       True
+    Ready             False
+    ContainersReady   False
+    PodScheduled      True
+    Volumes:
+    default-token-vgwdh:
     Type:        Secret (a volume populated by a Secret)
     SecretName:  default-token-vgwdh
     Optional:    false
-QoS Class:       BestEffort
-Node-Selectors:  <none>
-Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+    QoS Class:       BestEffort
+    Node-Selectors:  <none>
+    Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
                  node.kubernetes.io/unreachable:NoExecute for 300s
-Events:
-  Type     Reason     Age                  From                     Message
-  ----     ------     ----                 ----                     -------
+    Events:
+    Type     Reason     Age                  From                     Message
+----     ------     ----                 ----                     -------
   Normal   Scheduled  3m22s                default-scheduler        Successfully assigned default/kubernetes-bootcamp-6b4c55d8fc-cgw94 to docker-desktop
   Normal   Pulling    70s (x4 over 3m19s)  kubelet, docker-desktop  Pulling image "gcr.io/google-samples/kubernetes-bootcamp:v10"
   Warning  Failed     55s (x4 over 3m4s)   kubelet, docker-desktop  Failed to pull image "gcr.io/google-samples/kubernetes-bootcamp:v10": rpc error: code = Unknown desc = Error response from daemon: Get https://gcr.io/v2/: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
@@ -935,7 +936,7 @@ Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
                  node.kubernetes.io/unreachable:NoExecute for 300s
 Events:
   Type    Reason     Age   From                     Message
-  ----    ------     ----  ----                     -------
+----    ------     ----  ----                     -------
   Normal  Scheduled  19m   default-scheduler        Successfully assigned default/kubernetes-bootcamp-b4d9f565-77b9b to docker-desktop
   Normal  Pulling    19m   kubelet, docker-desktop  Pulling image "jocatalin/kubernetes-bootcamp:v2"
   Normal  Pulled     13m   kubelet, docker-desktop  Successfully pulled image "jocatalin/kubernetes-bootcamp:v2"
@@ -949,9 +950,9 @@ C:\Users\pc>kubectl rollout undo deployments/kubernetes-bootcamp
 deployment.apps/kubernetes-bootcamp rolled back
 
     ```
-
+    
     The rollout command **reverted the deployment to the previous known state (v2 of the image)**. Updates are versioned and **you can revert to any previously know state of a Deployment**. List again the Pods:
-
+    
     ```shell
     C:\Users\pc>kubectl get pods
 NAME                                 READY   STATUS    RESTARTS   AGE
@@ -1005,7 +1006,7 @@ Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
                  node.kubernetes.io/unreachable:NoExecute for 300s
 Events:
   Type    Reason     Age   From                     Message
-  ----    ------     ----  ----                     -------
+----    ------     ----  ----                     -------
   Normal  Scheduled  23m   default-scheduler        Successfully assigned default/kubernetes-bootcamp-b4d9f565-77b9b to docker-desktop
   Normal  Pulling    23m   kubelet, docker-desktop  Pulling image "jocatalin/kubernetes-bootcamp:v2"
   Normal  Pulled     17m   kubelet, docker-desktop  Successfully pulled image "jocatalin/kubernetes-bootcamp:v2"
@@ -1013,7 +1014,7 @@ Events:
   Normal  Started    17m   kubelet, docker-desktop  Started container kubernetes-bootcamp
     ```
 ### Deploying an Application Using the Dashboard 
- 
+
 Enter the Kubernetes Dashboard by typing the command:
 
 `kubectl proxy`
@@ -1219,6 +1220,442 @@ A **Pod** is always running on the **work node**.The work nodes are the computin
 
 ![Working node](https://d33wubrfki0l68.cloudfront.net/5cb72d407cbe2755e581b6de757e0d81760d5b86/a9df9/docs/tutorials/kubernetes-basics/public/images/module_03_nodes.svg)
 <center>Working Node</center>
+
+# 2021 Update:
+
+## install and deploy K8s on Aliyun Ubuntu 20.0.4 ECS.
+
+We have got :
+
+```
+Master 114.55.101.177
+node1 47.102.132.205
+node2 139.224.51.176
+```
+
+### Namespace
+
+In Kubernetes, *namespaces* provides a mechanism for isolating groups of resources within a single cluster. Names of resources need to be unique within a namespace, but not across namespaces. Namespace-based scoping is applicable only for namespaced objects *(e.g. Deployments, Services, etc)* and not for cluster-wide objects *(e.g. StorageClass, Nodes, PersistentVolumes, etc)*.
+
+#### When to use multiple namespaces
+
+Namespaces are intended for use in environments with many users spread across multiple teams, or projects. For clusters with a few to tens of users, you should not need to create or think about namespaces at all. Start using namespaces when you need the features they provide.
+
+Namespaces provide a scope for names. Names of resources need to be unique within a namespace, but not across namespaces. Namespaces cannot be nested inside one another and each Kubernetes resource can only be in one namespace.
+
+Namespaces are a way to divide cluster resources between multiple users (via [resource quota](https://kubernetes.io/docs/concepts/policy/resource-quotas/)).
+
+It is not necessary to use multiple namespaces to separate slightly different resources, such as different versions of the same software: use [labels](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels) to distinguish resources within the same namespace.
+
+After the creation of Kubernetes cluster, 4 default namespaces will be created:
+
+```
+# inspect all the namespaces
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get ns
+NAME                   STATUS   AGE
+default                Active   6h30m  # All the objects that were not assigned to a namespace are allocated in default namespace
+kube-node-lease        Active   6h30m  # Heartbeat maintain, added after V1.13
+kube-public            Active   6h30m  # All the clients can access this namespace (including the ones that were not assigned with token)
+kube-system            Active   6h30m  # All the system resources created by kubernetes are kept in the namespace
+kubernetes-dashboard   Active   165m  # k8s web dashboard
+```
+
++ Create, delete, check the namespace Check one particular namespace:
+
+```
+
+# check the designated namespace
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get ns default
+NAME      STATUS   AGE
+default   Active   6h35m
+```
+
++ Check the status of the namespace: Active, the namespace is in use, Terminating, the namespace is being deleted.
+
+```shell
+# Resource quota: the resources limitation for the namespace
+# LimitRange: the resource limitatioon for every parts in namespace
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl describe ns default
+Name:         default
+Labels:       kubernetes.io/metadata.name=default
+Annotations:  <none>
+Status:       Active
+
+No resource quota.
+
+No LimitRange resource.
+
+# Then, we can create namespace 
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl create -f ns-dev.yaml
+namespace/dev created
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get ns dev
+NAME   STATUS   AGE
+dev    Active   29s
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl delete -f ns-dev.yaml
+namespace "dev" deleted
+```
+
++ Create, delete, check the namespace
+
+  ```shell
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl create ns dev
+  namespace/dev created
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get ns dev
+  NAME   STATUS   AGE
+  dev    Active   8s
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl delete ns dev
+  namespace "dev" deleted
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get ns dev
+  Error from server (NotFound): namespaces "dev" not found
+  ```
+
++ Prepare a yaml file 
+
+  ```shell
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# cat ns-dev.yaml
+  apiVersion: v1
+  kind: Namespace
+  metadata:
+          name: dev
+  
+  ```
+
++ Then, we can create namespace 
+
+  ```shell
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl create -f ns-dev.yaml
+  namespace/dev created
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get ns dev
+  NAME   STATUS   AGE
+  dev    Active   29s
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl delete -f ns-dev.yaml
+  namespace "dev" deleted
+  ```
+
+### POD
+
+*Pods* are the smallest deployable units of computing that you can create and manage in Kubernetes.
+
+A *Pod* (as in a pod of whales or pea pod) is a group of one or more [containers](https://kubernetes.io/docs/concepts/containers/), with shared storage and network resources, and a specification for how to run the containers. A Pod's contents are always co-located and co-scheduled, and run in a shared context. A Pod models an application-specific "logical host": it contains one or more application containers which are relatively tightly coupled. In non-cloud contexts, applications executed on the same physical or virtual machine are analogous to cloud applications executed on the same logical host.
+
+As well as application containers, a Pod can contain [init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) that run during Pod startup. You can also inject [ephemeral containers](https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/) for debugging if your cluster offers this
+
+The shared context of a Pod is a set of Linux namespaces, cgroups, and potentially other facets of isolation - the same things that isolate a Docker container. Within a Pod's context, the individual applications may have further sub-isolations applied.
+
+In terms of Docker concepts, a Pod is similar to a group of Docker containers with shared namespaces and shared filesystem volumes.
+
+After the generation of cluster, all the components in cluster are run via Pod, which can be viewed through:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl get pod -n kube-system
+NAME                                              READY   STATUS    RESTARTS      AGE
+coredns-7f6cbbb7b8-m7lbb                          1/1     Running   0             10h
+coredns-7f6cbbb7b8-mn6zk                          1/1     Running   0             10h
+etcd-izbp17v5lhpr4qztcxqu33z                      1/1     Running   0             10h
+kube-apiserver-izbp17v5lhpr4qztcxqu33z            1/1     Running   3 (10h ago)   10h
+kube-controller-manager-izbp17v5lhpr4qztcxqu33z   1/1     Running   7             10h
+kube-flannel-ds-lbdz4                             1/1     Running   0             10h
+kube-flannel-ds-s97zd                             1/1     Running   0             10h
+kube-flannel-ds-vdh8q                             1/1     Running   0             10h
+kube-proxy-k5xnq                                  1/1     Running   0             10h
+kube-proxy-tn48w                                  1/1     Running   0             10h
+kube-proxy-zpgb7                                  1/1     Running   0             10h
+kube-scheduler-izbp17v5lhpr4qztcxqu33z            1/1     Running   7             10h
+```
+
++ Create and run
+
+  ```shell
+  # --image: decide the image for the Pod
+  # --port: decide the port run for the pod
+  # --namespace: decide the namespace for the Pod
+  root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl run nginx --image=nginx:1.17.1 --port=80 --namespace=dev
+  pod/nginx created
+  ```
+
+
++ Check the basic information for the Pod
+
+  ~~~shell
+   root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl get pod -n dev
+  NAME    READY   STATUS    RESTARTS   AGE
+  nginx   1/1     Running   0          36s
+  ~~~
+
++ Check the detailed information for the Pod
+
+  ~~~shell
+  root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl get pod -n dev -o wide
+  NAME    READY   STATUS    RESTARTS   AGE   IP           NODE                      NOMINATED NODE   READINESS GATES
+  nginx   1/1     Running   0          73s   10.244.1.4   izuf6hep6k903zyuzxb2kvz   <none>           <none>
+  
+  ~~~
+
++ Describe the information about the pod
+
+  ~~~shell
+  root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl describe pod nginx -n dev
+  Name:         nginx
+  Namespace:    dev
+  Priority:     0
+  Node:         izuf6hep6k903zyuzxb2kvz/172.27.41.194
+  Start Time:   Fri, 05 Nov 2021 21:58:15 +0800
+  Labels:       run=nginx
+  Annotations:  <none>
+  Status:       Running
+  IP:           10.244.1.4
+  IPs:
+    IP:  10.244.1.4
+  Containers:
+    nginx:
+      Container ID:   docker://1747e3e0497c6b7bf99a2cbd2df7b461722d343c013e1709f07b237ee4ebc66b
+      Image:          nginx:1.17.1
+      Image ID:       docker-pullable://nginx@sha256:b4b9b3eee194703fc2fa8afa5b7510c77ae70cfba567af1376a573a967c03dbb
+      Port:           80/TCP
+      Host Port:      0/TCP
+      State:          Running
+        Started:      Fri, 05 Nov 2021 21:58:37 +0800
+      Ready:          True
+      Restart Count:  0
+      Environment:    <none>
+      Mounts:
+        /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-pcpjn (ro)
+  Conditions:
+    Type              Status
+    Initialized       True 
+    Ready             True 
+    ContainersReady   True 
+    PodScheduled      True 
+  Volumes:
+    kube-api-access-pcpjn:
+      Type:                    Projected (a volume that contains injected data from multiple sources)
+      TokenExpirationSeconds:  3607
+      ConfigMapName:           kube-root-ca.crt
+      ConfigMapOptional:       <nil>
+      DownwardAPI:             true
+  QoS Class:                   BestEffort
+  Node-Selectors:              <none>
+  Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                               node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+  Events:
+    Type    Reason     Age    From               Message
+    ----    ------     ----   ----               -------
+    Normal  Scheduled  3m5s   default-scheduler  Successfully assigned dev/nginx to izuf6hep6k903zyuzxb2kvz
+    Normal  Pulling    3m4s   kubelet            Pulling image "nginx:1.17.1"
+    Normal  Pulled     2m43s  kubelet            Successfully pulled image "nginx:1.17.1" in 20.702306855s
+    Normal  Created    2m43s  kubelet            Created container nginx
+    Normal  Started    2m43s  kubelet            Started container nginx
+  
+  ~~~
+
++ Using yaml as definition
+
+  The following is an example of a Pod which consists of a container running the image `nginx:1.14.2`.
+
+  ```shell
+  root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# cat pod-nginx.yaml
+  apiVersion: v1
+  kind: Pod
+  metadata:
+      name: nginx
+      namespace: dev
+  spec:
+      containers:
+      - image: nginx: 1.17.1
+        imagePullPolicy: IfNotPresent
+        name: Pod
+        ports:
+        - name: nginx-port
+          containerPort: 80
+          protocol: TCP
+  
+  ```
+
+To create the Pod shown above, run the following command:
+
+```shells
+kubectl apply -f pod.nginx.yaml
+```
+
+Pods are generally not created directly and are created using workload resources.
+
+### Labels 
+
+*Labels* are key/value pairs that are attached to objects, such as pods. Labels are intended to be used to specify identifying attributes of objects that are meaningful and relevant to users, but do not directly imply semantics to the core system. Labels can be used to organize and to select subsets of objects. Labels can be attached to objects at creation time and subsequently added and modified at any time. Each object can have a set of key/value labels defined. Each Key must be unique for a given object.
+
+#### Motivation
+
+Labels enable users to map their own organizational structures onto system objects in a loosely coupled fashion, without requiring clients to store these mappings.
+
+Service deployments and batch processing pipelines are often multi-dimensional entities (e.g., multiple partitions or deployments, multiple release tracks, multiple tiers, multiple micro-services per tier). Management often requires cross-cutting operations, which breaks encapsulation of strictly hierarchical representations, especially rigid hierarchies determined by the infrastructure rather than by users
+
+Example labels:
+
+- `"release" : "stable"`, `"release" : "canary"`
+- `"environment" : "dev"`, `"environment" : "qa"`, `"environment" : "production"`
+- `"tier" : "frontend"`, `"tier" : "backend"`, `"tier" : "cache"`
+- `"partition" : "customerA"`, `"partition" : "customerB"`
+- `"track" : "daily"`, `"track" : "weekly"`
+
+#### Syntax and Character set
+
+*Labels* are key/value pairs. Valid label keys have two segments: an optional prefix and name, separated by a slash (`/`). The name segment is required and must be 63 characters or less, beginning and ending with an alphanumeric character (`[a-z0-9A-Z]`) with dashes (`-`), underscores (`_`), dots (`.`), and alphanumerics between. The prefix is optional. If specified, the prefix must be a DNS subdomain: a series of DNS labels separated by dots (`.`), not longer than 253 characters in total, followed by a slash (`/`).
+
+If the prefix is omitted, the label Key is presumed to be private to the user. Automated system components (e.g. `kube-scheduler`, `kube-controller-manager`, `kube-apiserver`, `kubectl`, or other third-party automation) which add labels to end-user objects must specify a prefix.
+
+The `kubernetes.io/` and `k8s.io/` prefixes are [reserved](https://kubernetes.io/docs/reference/labels-annotations-taints/) for Kubernetes core components.
+
+Valid label value:
+
+- must be 63 characters or less (can be empty),
+- unless empty, must begin and end with an alphanumeric character (`[a-z0-9A-Z]`),
+- could contain dashes (`-`), underscores (`_`), dots (`.`), and alphanumerics between.
+
+For example, here's the configuration file for a Pod that has two labels `environment: production` and `app: nginx` :
+
+~~~shell
+apiVersion: v1
+kind: Pod
+metadata:
+  name: label-demo
+  labels:
+    environment: production
+    app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+~~~
+
+#### Label selectors
+
+Unlike [names and UIDs](https://kubernetes.io/docs/concepts/overview/working-with-objects/names/), labels do not provide uniqueness. In general, we expect many objects to carry the same label(s).
+
+Via a *label selector*, the client/user can identify a set of objects. The label selector is the core grouping primitive in Kubernetes.
+
+The API currently supports two types of selectors: *equality-based* and *set-based*. A label selector can be made of multiple *requirements* which are comma-separated. In the case of multiple requirements, all must be satisfied so the comma separator acts as a logical *AND* (`&&`) operator.
+
+The semantics of empty or non-specified selectors are dependent on the context, and API types that use selectors should document the validity and meaning of them.
+
+#### *Equality-based* requirement
+
+*Equality-* or *inequality-based* requirements allow filtering by label keys and values. Matching objects must satisfy all of the specified label constraints, though they may have additional labels as well. Three kinds of operators are admitted `=`,`==`,`!=`. The first two represent *equality* (and are synonyms), while the latter represents *inequality*. For example:
+
+```
+environment = production
+tier != frontend
+```
+
+The former selects all resources with key equal to `environment` and value equal to `production`. The latter selects all resources with key equal to `tier` and value distinct from `frontend`, and all resources with no labels with the `tier` key. One could filter for resources in `production` excluding `frontend` using the comma operator: `environment=production,tier!=frontend`
+
+One usage scenario for equality-based label requirement is for Pods to specify node selection criteria. For example, the sample Pod below selects nodes with the label "`accelerator=nvidia-tesla-p100`".
+
+
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cuda-test
+spec:
+  containers:
+    - name: cuda-test
+      image: "k8s.gcr.io/cuda-vector-add:v0.1"
+      resources:
+        limits:
+          nvidia.com/gpu: 1
+  nodeSelector:
+    accelerator: nvidia-tesla-p100
+```
+
+### *Set-based* requirement
+
+*Set-based* label requirements allow filtering keys according to a set of values. Three kinds of operators are supported: `in`,`notin` and `exists` (only the key identifier). For example:
+
+```
+environment in (production, qa)
+tier notin (frontend, backend)
+partition
+!partition
+```
+
+- The first example selects all resources with key equal to `environment` and value equal to `production` or `qa`.
+- The second example selects all resources with key equal to `tier` and values other than `frontend` and `backend`, and all resources with no labels with the `tier` key.
+- The third example selects all resources including a label with key `partition`; no values are checked.
+- The fourth example selects all resources without a label with key `partition`; no values are checked.
+
+Similarly the comma separator acts as an *AND* operator. So filtering resources with a `partition` key (no matter the value) and with `environment` different than `qa` can be achieved using `partition,environment notin (qa)`. The *set-based* label selector is a general form of equality since `environment=production` is equivalent to `environment in (production)`; similarly for `!=` and `notin`.
+
+*Set-based* requirements can be mixed with *equality-based* requirements. For example: `partition in (customerA, customerB),environment!=qa`.
+
+#### API
+
+label a resource and check the label of a resource:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl label pod nginx version=1.0 -n dev
+pod/nginx labeled
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get pod nginx -n dev --show-labels
+NAME    READY   STATUS    RESTARTS   AGE   LABELS
+nginx   1/1     Running   0          13m   version=1.0
+```
+
+update the label of a resource:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl label pod nginx version=2.0 -n dev --overwrite
+pod/nginx labeled
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get pod nginx -n dev --show-labels
+NAME    READY   STATUS    RESTARTS   AGE   LABELS
+nginx   1/1     Running   0          15m   version=2.0
+
+```
+
+remove a label for resouce:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl label pod nginx -n dev version-
+pod/nginx labeled
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get pod -n dev --show-labels
+NAME    READY   STATUS    RESTARTS   AGE   LABELS
+nginx   1/1     Running   0          35m   <none>
+```
+
+Define a labe via `yaml`:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# cat pod-nginx.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+    name: nginx
+    namespace: dev
+    labels:
+      version: "3.0"
+      env: "test"
+spec:
+    containers:
+    - image: nginx:1.17.1
+      imagePullPolicy: IfNotPresent
+      name: pod
+      ports:
+      - name: nginx-port
+        containerPort: 80
+        protocol: TCP
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl apply -f pod-nginx.yaml
+pod/nginx configured
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get pods -n dev --show-labels
+NAME    READY   STATUS    RESTARTS   AGE   LABELS
+nginx   1/1     Running   0          41m   env=test,version=3.0
+```
+
+
+
+
+
+
 
 Check out the [Jekyll docs][jekyll-docs] for more info on how to get the most out of Jekyll. File all bugs/feature requests at [Jekyll’s GitHub repo][jekyll-gh]. If you have questions, you can ask them on [Jekyll Talk][jekyll-talk].
 
