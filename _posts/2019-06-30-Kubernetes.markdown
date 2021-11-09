@@ -803,14 +803,12 @@ Rolling updates allow the following actions:
                  node.kubernetes.io/unreachable:NoExecute for 300s
     Events:
     Type    Reason     Age    From                     Message
-----    ------     ----   ----                     -------
-  Normal  Scheduled  13m    default-scheduler        Successfully assigned default/kubernetes-bootcamp-b4d9f565-77b9b to docker-desktop
-  Normal  Pulling    13m    kubelet, docker-desktop  Pulling image "jocatalin/kubernetes-bootcamp:v2"
-  Normal  Pulled     7m38s  kubelet, docker-desktop  Successfully pulled image "jocatalin/kubernetes-bootcamp:v2"
-  Normal  Created    7m35s  kubelet, docker-desktop  Created container kubernetes-bootcamp
-  Normal  Started    7m33s  kubelet, docker-desktop  Started container kubernetes-bootcamp
+      Normal  Scheduled  13m    default-scheduler        Successfully assigned default/kubernetes-bootcamp-b4d9f565-77b9b to docker-desktop
+      Normal  Pulling    13m    kubelet, docker-desktop  Pulling image "jocatalin/kubernetes-bootcamp:v2"
+      Normal  Pulled     7m38s  kubelet, docker-desktop  Successfully pulled image "jocatalin/kubernetes-bootcamp:v2"
+      Normal  Created    7m35s  kubelet, docker-desktop  Created container kubernetes-bootcamp
+      Normal  Started    7m33s  kubelet, docker-desktop  Started container kubernetes-bootcamp
 
-    ```
 4. Rolling Back an Update
 
     Let's perform another update, and deploy image tagged as `v10`:
@@ -885,82 +883,79 @@ Rolling updates allow the following actions:
                  node.kubernetes.io/unreachable:NoExecute for 300s
     Events:
     Type     Reason     Age                  From                     Message
-----     ------     ----                 ----                     -------
-  Normal   Scheduled  3m22s                default-scheduler        Successfully assigned default/kubernetes-bootcamp-6b4c55d8fc-cgw94 to docker-desktop
-  Normal   Pulling    70s (x4 over 3m19s)  kubelet, docker-desktop  Pulling image "gcr.io/google-samples/kubernetes-bootcamp:v10"
-  Warning  Failed     55s (x4 over 3m4s)   kubelet, docker-desktop  Failed to pull image "gcr.io/google-samples/kubernetes-bootcamp:v10": rpc error: code = Unknown desc = Error response from daemon: Get https://gcr.io/v2/: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
-  Warning  Failed     55s (x4 over 3m4s)   kubelet, docker-desktop  Error: ErrImagePull
-  Warning  Failed     30s (x6 over 3m4s)   kubelet, docker-desktop  Error: ImagePullBackOff
-  Normal   BackOff    17s (x7 over 3m4s)   kubelet, docker-desktop  Back-off pulling image "gcr.io/google-samples/kubernetes-bootcamp:v10"
-Name:         kubernetes-bootcamp-b4d9f565-77b9b
-Namespace:    default
-Priority:     0
-Node:         docker-desktop/192.168.65.3
-Start Time:   Fri, 17 Jul 2020 14:38:53 +0800
-Labels:       app=kubernetes-bootcamp
-              pod-template-hash=b4d9f565
-Annotations:  <none>
-Status:       Running
-IP:           10.1.0.188
-IPs:
-  IP:           10.1.0.188
-Controlled By:  ReplicaSet/kubernetes-bootcamp-b4d9f565
-Containers:
-  kubernetes-bootcamp:
-    Container ID:   docker://f25cfbffbc2757eaaf37ae534d82a4ffbb919198e542812d0e5c876a10f18bd3
-    Image:          jocatalin/kubernetes-bootcamp:v2
-    Image ID:       docker-pullable://jocatalin/kubernetes-bootcamp@sha256:fb1a3ced00cecfc1f83f18ab5cd14199e30adc1b49aa4244f5d65ad3f5feb2a5
-    Port:           <none>
-    Host Port:      <none>
-    State:          Running
-      Started:      Fri, 17 Jul 2020 14:44:59 +0800
-    Ready:          True
-    Restart Count:  0
-    Environment:    <none>
-    Mounts:
-      /var/run/secrets/kubernetes.io/serviceaccount from default-token-vgwdh (ro)
-Conditions:
-  Type              Status
-  Initialized       True
-  Ready             True
-  ContainersReady   True
-  PodScheduled      True
-Volumes:
-  default-token-vgwdh:
-    Type:        Secret (a volume populated by a Secret)
-    SecretName:  default-token-vgwdh
-    Optional:    false
-QoS Class:       BestEffort
-Node-Selectors:  <none>
-Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
-                 node.kubernetes.io/unreachable:NoExecute for 300s
-Events:
-  Type    Reason     Age   From                     Message
-----    ------     ----  ----                     -------
-  Normal  Scheduled  19m   default-scheduler        Successfully assigned default/kubernetes-bootcamp-b4d9f565-77b9b to docker-desktop
-  Normal  Pulling    19m   kubelet, docker-desktop  Pulling image "jocatalin/kubernetes-bootcamp:v2"
-  Normal  Pulled     13m   kubelet, docker-desktop  Successfully pulled image "jocatalin/kubernetes-bootcamp:v2"
-  Normal  Created    13m   kubelet, docker-desktop  Created container kubernetes-bootcamp
-  Normal  Started    13m   kubelet, docker-desktop  Started container kubernetes-bootcamp
-    ```
-    There is no image called v10 in the repository. Let’s roll back to our previously working version. We’ll use the rollout undo command:
-
-    ```shell
-C:\Users\pc>kubectl rollout undo deployments/kubernetes-bootcamp
-deployment.apps/kubernetes-bootcamp rolled back
-
-    ```
+     Normal   Scheduled  3m22s                default-scheduler        Successfully assigned default/kubernetes-bootcamp-6b4c55d8fc-cgw94 to docker-desktop
+      Normal   Pulling    70s (x4 over 3m19s)  kubelet, docker-desktop  Pulling image "gcr.io/google-samples/kubernetes-bootcamp:v10"
+      Warning  Failed     55s (x4 over 3m4s)   kubelet, docker-desktop  Failed to pull image "gcr.io/google-samples/kubernetes-bootcamp:v10": rpc error: code = Unknown desc = Error response from daemon: Get https://gcr.io/v2/: net/http: request canceled while waiting for connection (Client.Timeout exceeded while awaiting headers)
+      Warning  Failed     55s (x4 over 3m4s)   kubelet, docker-desktop  Error: ErrImagePull
+      Warning  Failed     30s (x6 over 3m4s)   kubelet, docker-desktop  Error: ImagePullBackOff
+      Normal   BackOff    17s (x7 over 3m4s)   kubelet, docker-desktop  Back-off pulling image "gcr.io/google-samples/kubernetes-bootcamp:v10"
+    Name:         kubernetes-bootcamp-b4d9f565-77b9b
+    Namespace:    default
+    Priority:     0
+    Node:         docker-desktop/192.168.65.3
+    Start Time:   Fri, 17 Jul 2020 14:38:53 +0800
+    Labels:       app=kubernetes-bootcamp
+                  pod-template-hash=b4d9f565
+    Annotations:  <none>
+    Status:       Running
+    IP:           10.1.0.188
+    IPs:
+      IP:           10.1.0.188
+    Controlled By:  ReplicaSet/kubernetes-bootcamp-b4d9f565
+    Containers:
+      kubernetes-bootcamp:
+        Container ID:   docker://f25cfbffbc2757eaaf37ae534d82a4ffbb919198e542812d0e5c876a10f18bd3
+        Image:          jocatalin/kubernetes-bootcamp:v2
+        Image ID:       docker-pullable://jocatalin/kubernetes-bootcamp@sha256:fb1a3ced00cecfc1f83f18ab5cd14199e30adc1b49aa4244f5d65ad3f5feb2a5
+        Port:           <none>
+        Host Port:      <none>
+        State:          Running
+          Started:      Fri, 17 Jul 2020 14:44:59 +0800
+        Ready:          True
+        Restart Count:  0
+        Environment:    <none>
+        Mounts:
+          /var/run/secrets/kubernetes.io/serviceaccount from default-token-vgwdh (ro)
+    Conditions:
+      Type              Status
+      Initialized       True
+      Ready             True
+      ContainersReady   True
+      PodScheduled      True
+    Volumes:
+      default-token-vgwdh:
+        Type:        Secret (a volume populated by a Secret)
+        SecretName:  default-token-vgwdh
+        Optional:    false
+    QoS Class:       BestEffort
+    Node-Selectors:  <none>
+    Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
+                     node.kubernetes.io/unreachable:NoExecute for 300s
+    Events:
+      Type    Reason     Age   From                     Message
     
-    The rollout command **reverted the deployment to the previous known state (v2 of the image)**. Updates are versioned and **you can revert to any previously know state of a Deployment**. List again the Pods:
+    ----    ------     ----  ----                     -------
     
-    ```shell
-    C:\Users\pc>kubectl get pods
+      Normal  Scheduled  19m   default-scheduler        Successfully assigned default/kubernetes-bootcamp-b4d9f565-77b9b to docker-desktop
+      Normal  Pulling    19m   kubelet, docker-desktop  Pulling image "jocatalin/kubernetes-bootcamp:v2"
+      Normal  Pulled     13m   kubelet, docker-desktop  Successfully pulled image "jocatalin/kubernetes-bootcamp:v2"
+      Normal  Created    13m   kubelet, docker-desktop  Created container kubernetes-bootcamp
+      Normal  Started    13m   kubelet, docker-desktop  Started container kubernetes-bootcamp
+
+There is no image called v10 in the repository. Let’s roll back to our previously working version. We’ll use the rollout undo command:
+
+    C:\Users\pc>kubectl rollout undo deployments/kubernetes-bootcamp
+    deployment.apps/kubernetes-bootcamp rolled back
+The rollout command **reverted the deployment to the previous known state (v2 of the image)**. Updates are versioned and **you can revert to any previously know state of a Deployment**. List again the Pods:
+
+```shell
+C:\Users\pc>kubectl get pods
 NAME                                 READY   STATUS    RESTARTS   AGE
-kubernetes-bootcamp-b4d9f565-77b9b   1/1     Running   0          21m
-    ```
-    Four Pods are running. Check again the image deployed on the them:
+kubernetes-bootcamp-b4d9f565-77b9b   1/1     Running   0          21
+```
+Four Pods are running. Check again the image deployed on the them:
 
-    ```shell
+```shell
 C:\Users\pc>kubectl describe pods
 Name:         kubernetes-bootcamp-b4d9f565-77b9b
 Namespace:    default
@@ -1006,13 +1001,16 @@ Tolerations:     node.kubernetes.io/not-ready:NoExecute for 300s
                  node.kubernetes.io/unreachable:NoExecute for 300s
 Events:
   Type    Reason     Age   From                     Message
+
 ----    ------     ----  ----                     -------
+
   Normal  Scheduled  23m   default-scheduler        Successfully assigned default/kubernetes-bootcamp-b4d9f565-77b9b to docker-desktop
   Normal  Pulling    23m   kubelet, docker-desktop  Pulling image "jocatalin/kubernetes-bootcamp:v2"
   Normal  Pulled     17m   kubelet, docker-desktop  Successfully pulled image "jocatalin/kubernetes-bootcamp:v2"
   Normal  Created    17m   kubelet, docker-desktop  Created container kubernetes-bootcamp
   Normal  Started    17m   kubelet, docker-desktop  Started container kubernetes-bootcamp
-    ```
+  
+```
 ### Deploying an Application Using the Dashboard 
 
 Enter the Kubernetes Dashboard by typing the command:
@@ -1233,7 +1231,9 @@ node1 47.102.132.205
 node2 139.224.51.176
 ```
 
-### Namespace
+## General uses for k8s
+
+### ***Namespace***
 
 In Kubernetes, *namespaces* provides a mechanism for isolating groups of resources within a single cluster. Names of resources need to be unique within a namespace, but not across namespaces. Namespace-based scoping is applicable only for namespaced objects *(e.g. Deployments, Services, etc)* and not for cluster-wide objects *(e.g. StorageClass, Nodes, PersistentVolumes, etc)*.
 
@@ -1332,7 +1332,7 @@ namespace "dev" deleted
   namespace "dev" deleted
   ```
 
-### POD
+### ***POD***
 
 *Pods* are the smallest deployable units of computing that you can create and manage in Kubernetes.
 
@@ -1479,7 +1479,7 @@ kubectl apply -f pod.nginx.yaml
 
 Pods are generally not created directly and are created using workload resources.
 
-### Labels 
+### ***Labels***
 
 *Labels* are key/value pairs that are attached to objects, such as pods. Labels are intended to be used to specify identifying attributes of objects that are meaningful and relevant to users, but do not directly imply semantics to the core system. Labels can be used to organize and to select subsets of objects. Labels can be attached to objects at creation time and subsequently added and modified at any time. Each object can have a set of key/value labels defined. Each Key must be unique for a given object.
 
@@ -1650,6 +1650,206 @@ root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get pods -n dev --show-labels
 NAME    READY   STATUS    RESTARTS   AGE   LABELS
 nginx   1/1     Running   0          41m   env=test,version=3.0
 ```
+
+### ***Deployment***
+
+A *Deployment* provides declarative updates for [Pods](https://kubernetes.io/docs/concepts/workloads/pods/) and [ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/).
+
+You describe a *desired state* in a Deployment, and the Deployment [Controller](https://kubernetes.io/docs/concepts/architecture/controller/) changes the actual state to the desired state at a controlled rate. You can define Deployments to create new ReplicaSets, or to remove existing Deployments and adopt all their resources with new Deployments.
+
+#### Use Case
+
+The following are typical use cases for Deployments:
+
+- [Create a Deployment to rollout a ReplicaSet](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#creating-a-deployment). The ReplicaSet creates Pods in the background. Check the status of the rollout to see if it succeeds or not.
+- [Declare the new state of the Pods](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a-deployment) by updating the PodTemplateSpec of the Deployment. A new ReplicaSet is created and the Deployment manages moving the Pods from the old ReplicaSet to the new one at a controlled rate. Each new ReplicaSet updates the revision of the Deployment.
+- [Rollback to an earlier Deployment revision](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-back-a-deployment) if the current state of the Deployment is not stable. Each rollback updates the revision of the Deployment.
+- [Scale up the Deployment to facilitate more load](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#scaling-a-deployment).
+- [Pause the Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#pausing-and-resuming-a-deployment) to apply multiple fixes to its PodTemplateSpec and then resume it to start a new rollout.
+- [Use the status of the Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#deployment-status) as an indicator that a rollout has stuck.
+- [Clean up older ReplicaSets](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#clean-up-policy) that you don't need anymore.
+
+To create a deployment via `yaml`:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# cat deploy-nginx.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nginx
+    namespace: dev
+spec:
+    replicas: 3
+    selector: 
+        matchLabels:
+            run: nginx
+    template: 
+        metadata: 
+            labels: 
+                run: nginx
+        spec: 
+            containers: 
+            - image: nginx:1.17.1
+              name: nginx
+              ports:
+              - containerPort: 80
+                protocol: TCP
+```
+
+​	In this example:
+
+- A Deployment named `nginx` is created, indicated by the `.metadata.name` field.
+
+- The Deployment creates three replicated Pods, indicated by the `.spec.replicas` field.
+
+- The `.spec.selector` field defines how the Deployment finds which Pods to manage. In this case, you select a label that is defined in the Pod template (`app: nginx`). However, more sophisticated selection rules are possible, as long as the Pod template itself satisfies the rule.
+
+  **Note:** The `.spec.selector.matchLabels` field is a map of {key,value} pairs. A single {key,value} in the `matchLabels` map is equivalent to an element of `matchExpressions`, whose `key` field is "key", the `operator` is "In", and the `values` array contains only "value". All of the requirements, from both `matchLabels` and `matchExpressions`, must be satisfied in order to match.
+
+- The `template` field contains the following sub-fields:
+
+  - The Pods are labeled `app: nginx`using the `.metadata.labels` field.
+  - The Pod template's specification, or `.template.spec` field, indicates that the Pods run one container, `nginx`, which runs the `nginx` [Docker Hub](https://hub.docker.com/) image at version 1.14.2.
+  - Create one container and name it `nginx` using the `.spec.template.spec.containers[0].name` field.
+
+Run `kubectl get deployments` to check if the Deployment was created.
+
+If the Deployment is still being created, the output is similar to the following:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl create -f deploy-nginx.yaml
+deployment.apps/nginx created
+```
+
+Run `kubectl get deployments` to check if the Deployment was created.
+
+If the Deployment is still being created, the output is similar to the following:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:/data/k8s# kubectl get deployment,pods -n dev
+NAME                    READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nginx   3/3     3            3           75s
+
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/nginx-66ffc897cf-7jtrt   1/1     Running   0          75s
+pod/nginx-66ffc897cf-qp8l5   1/1     Running   0          75s
+pod/nginx-66ffc897cf-w87gx   1/1     Running   0          75s
+```
+
+When you inspect the Deployments in your cluster, the following fields are displayed:
+
+- `NAME` lists the names of the Deployments in the namespace.
+- `READY` displays how many replicas of the application are available to your users. It follows the pattern ready/desired.
+- `UP-TO-DATE` displays the number of replicas that have been updated to achieve the desired state.
+- `AVAILABLE` displays how many replicas of the application are available to your users.
+- `AGE` displays the amount of time that the application has been running.
+
+Notice how the number of desired replicas is 3 according to `.spec.replicas` field.
+
+To see the labels automatically generated for each Pod, run `kubectl get pods --show-labels`. The output is similar to:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl get pods -n dev --show-labels
+NAME                     READY   STATUS    RESTARTS   AGE     LABELS
+nginx-66ffc897cf-7jtrt   1/1     Running   0          3h58m   pod-template-hash=66ffc897cf,run=nginx
+nginx-66ffc897cf-qp8l5   1/1     Running   0          3h58m   pod-template-hash=66ffc897cf,run=nginx
+nginx-66ffc897cf-w87gx   1/1     Running   0          3h58m   pod-template-hash=66ffc897cf,run=nginx
+
+```
+
+The created *ReplicaSet* ensures that there are three `nginx` Pods.
+
+Get details of the deployments:
+
+```shell
+root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl describe deployments -n dev
+Name:                   nginx
+Namespace:              dev
+CreationTimestamp:      Tue, 09 Nov 2021 11:24:07 +0800
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               run=nginx
+Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  run=nginx
+  Containers:
+   nginx:
+    Image:        nginx:1.17.1
+    Port:         80/TCP
+    Host Port:    0/TCP
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      True    MinimumReplicasAvailable
+  Progressing    True    NewReplicaSetAvailable
+OldReplicaSets:  <none>
+NewReplicaSet:   nginx-66ffc897cf (3/3 replicas created)
+Events:          <none>
+```
+
+
+
+### ***Service***
+
+An abstract way to expose an application running on a set of [Pods](https://kubernetes.io/docs/concepts/workloads/pods/) as a network service.
+
+With Kubernetes you don't need to modify your application to use an unfamiliar service discovery mechanism. Kubernetes gives Pods their own IP addresses and a single DNS name for a set of Pods, and can load-balance across them.
+
+#### Motivation
+
+Kubernetes [Pods](https://kubernetes.io/docs/concepts/workloads/pods/) are created and destroyed to match the state of your cluster. Pods are nonpermanent resources. If you use a [Deployment](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/) to run your app, it can create and destroy Pods dynamically.
+
+Each Pod gets its own IP address, however in a Deployment, the set of Pods running in one moment in time could be different from the set of Pods running that application a moment later.
+
+This leads to a problem: if some set of Pods (call them "backends") provides functionality to other Pods (call them "frontends") inside your cluster, how do the frontends find out and keep track of which IP address to connect to, so that the frontend can use the backend part of the workload?
+
+Enter *Services*.
+
+#### Service resources
+
+In *Kubernetes*, a Service is an abstraction which defines a logical set of Pods and a policy by which to access them (sometimes this pattern is called a micro-service). The set of Pods targeted by a Service is usually determined by a [selector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/). To learn about other ways to define Service endpoints, see [Services *without* selectors](https://kubernetes.io/docs/concepts/services-networking/service/#services-without-selectors).
+
+For example, consider a stateless image-processing backend which is running with 3 replicas. Those replicas are fungible—frontends do not care which backend they use. While the actual Pods that compose the backend set may change, the frontend clients should not need to be aware of that, nor should they need to keep track of the set of backends themselves.
+
+The Service abstraction enables this decoupling.
+
+#### Cloud-native service discovery
+
+If you're able to use Kubernetes APIs for service discovery in your application, you can query the [API server](https://kubernetes.io/docs/concepts/overview/components/#kube-apiserver) for Endpoints, that get updated whenever the set of Pods in a Service changes.
+
+For non-native applications, Kubernetes offers ways to place a network port or load balancer in between your application and the backend Pods.
+
++ Create a service that can only be accessed inside cluster:
+
+  ```shell
+  # Expose a Service
+  # This service can only be used by node1, node2 and master
+  root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl expose deploy nginx -n dev --name=svc-nginx1 --type=ClusterIP --port=80 --target-port=80
+  service/svc-nginx1 exposed
+  
+  # Check the exposed service
+  root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl get service -n dev
+  NAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+  svc-nginx1   ClusterIP   10.100.145.250   <none>        80/TCP    15s
+  ```
+
++ Create a service that can be accessed through out side world:
+
+  ```shell
+  root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl expose deploy nginx -n dev --name=svc-nginx2 --type=NodePort --port=80 --target-port=80 -n devservice/svc-nginx2 exposed​# If we check the service, we can find that there is a port to be mapped
+  
+  root@iZbp17v5lhpr4qztcxqu33Z:~# kubectl get svc -n dev -o wideNAME         TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE    SELECTORsvc-nginx1   ClusterIP   10.100.145.250   <none>        80/TCP         9m5s   run=nginxsvc-nginx2   NodePort    10.107.190.174   <none>        80:32286/TCP   2m7s   run=nginx​
+  ```
+
+  Then, we can access the service provided by nginx through http://114.55.101.177:32286/
+
+  
 
 
 
